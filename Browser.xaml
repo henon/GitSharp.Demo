@@ -33,7 +33,7 @@
                 </Menu>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
                     <Label>Path to repository:</Label>
-                    <TextBox Name="m_url_textbox">..\..\..\</TextBox>
+                    <TextBox Name="m_url_textbox">..\..\</TextBox>
                     <Button Click="OnLoadRepository" Margin="5,0,0,0">Load</Button>
                     <!--<Label Margin="10,0,0,0">Select a commit. Differences to the previous commit are highlited in red.</Label>-->
                 </StackPanel>
