@@ -42,9 +42,9 @@ namespace GitSharp.Demo
             var repo = Repository.Open(url);
             var head = repo.OpenCommit(repo.Head.ObjectId) as Commit;
             m_repository = repo;
-            var tags = repo.Tags.Values.Select(@ref => repo.MapTag(@ref.Name, @ref.ObjectId));
+            var tags = repo.getTags().Values.Select(@ref => repo.MapTag(@ref.Name, @ref.ObjectId));
             //var branches = repo.Branches.Values.Select(@ref => repo.MapCommit(@ref.ObjectId));
-            m_refs.ItemsSource = repo.Refs.Values;
+            m_refs.ItemsSource = repo.getAllRefs().Values;
             DisplayCommit(head, "HEAD");
             ReloadConfiguration();
         }
@@ -54,7 +54,7 @@ namespace GitSharp.Demo
             if (node.IsBlob)
             {
                 //var blob = node as Blob;
-                var text = Encoding.UTF8.GetString(m_repository.OpenBlob(node.Id).getBytes()); // TODO: better interface for blobs
+                var text = Encoding.UTF8.GetString(m_repository.OpenBlob(node.Id).Bytes); // TODO: better interface for blobs
                 m_object.Document.Blocks.Clear();
                 var p = new Paragraph();
                 p.Inlines.Add(text);
@@ -79,12 +79,12 @@ namespace GitSharp.Demo
             if (r == null)
                 return;
             var obj = m_repository.OpenObject(r.ObjectId);
-            if (obj.getType() == Constants.OBJ_COMMIT)
+            if (obj.Type == Constants.OBJ_COMMIT)
             {
                 DisplayCommit(m_repository.MapCommit(r.ObjectId), "Commit history of " + r.Name);
                 return;
             }
-            else if (obj.getType() == Constants.OBJ_TAG)
+            else if (obj.Type == Constants.OBJ_TAG)
             {
                 var tag = m_repository.MapTag(r.Name, r.ObjectId);
                 if (tag.TagId == r.ObjectId) // it sometimes happens to have self referencing tags
@@ -95,11 +95,11 @@ namespace GitSharp.Demo
                 DisplayCommit(tagged_commit, "Commit history of " + tag.TagName);
                 return;
             }
-            else if (obj.getType() == Constants.OBJ_TREE)
+            else if (obj.Type == Constants.OBJ_TREE)
             {
                 // hmm, display somehow
             }
-            else if (obj.getType() == Constants.OBJ_BLOB)
+            else if (obj.Type == Constants.OBJ_BLOB)
             {
                 // hmm, display somehow
             }
@@ -165,14 +165,14 @@ namespace GitSharp.Demo
 
         private void ReloadConfiguration()
         {
-            m_repository.Config.Load();
+            m_repository.Config.load();
             m_config_tree.ItemsSource = null;
             //m_config_tree.ItemsSource = m_repository.Config.Sections;
         }
 
         private void SaveConfiguration()
         {
-            m_repository.Config.Save();
+            m_repository.Config.save();
             ReloadConfiguration();
         }
 
