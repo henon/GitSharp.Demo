@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using Microsoft.Win32;
 using System.Reflection;
 using System.Diagnostics;
+using Git;
 
 namespace GitSharp.Demo
 {
@@ -28,7 +29,7 @@ namespace GitSharp.Demo
             m_commits.SelectionChanged += (o, args) => SelectCommit(m_commits.SelectedItem as Commit);
             //m_branches.SelectionChanged += (o, args) => SelectBranch(m_branches.SelectedItem as Branch);
             m_refs.SelectionChanged += (o, args) => SelectRef(m_refs.SelectedItem as Ref);
-            m_tree.SelectedItemChanged += (o, args) => SelectObject(m_tree.SelectedValue as TreeEntry);
+            m_tree.SelectedItemChanged += (o, args) => SelectObject(m_tree.SelectedValue as AbstractObject);
             //m_config_tree.SelectedItemChanged += (o, args) => SelectConfiguration(m_config_tree.SelectedItem);
         }
 
@@ -39,27 +40,28 @@ namespace GitSharp.Demo
         private void OnLoadRepository(object sender, RoutedEventArgs e)
         {
             var url = m_url_textbox.Text;
-            var repo = Repository.Open(url);
-            var head = repo.OpenCommit(repo.Head.ObjectId) as Commit;
+            var repo = new Repository(url);
+            var head = repo.Head.Target as Commit;
+            Debug.Assert(head is Commit);
             m_repository = repo;
-            var tags = repo.getTags().Values.Select(@ref => repo.MapTag(@ref.Name, @ref.ObjectId));
+            //var tags = repo.getTags().Values.Select(@ref => repo.MapTag(@ref.Name, @ref.ObjectId));
             //var branches = repo.Branches.Values.Select(@ref => repo.MapCommit(@ref.ObjectId));
-            m_refs.ItemsSource = repo.getAllRefs().Values;
+            m_refs.ItemsSource = repo.Refs.Values;
             DisplayCommit(head, "HEAD");
             ReloadConfiguration();
         }
 
-        private void SelectObject(TreeEntry node)
+        private void SelectObject(AbstractObject node)
         {
             if (node.IsBlob)
             {
-                //var blob = node as Blob;
-                var text = Encoding.UTF8.GetString(m_repository.OpenBlob(node.Id).Bytes); // TODO: better interface for blobs
+                var blob = node as Leaf;
+                var text = blob.Data;
                 m_object.Document.Blocks.Clear();
                 var p = new Paragraph();
                 p.Inlines.Add(text);
                 m_object.Document.Blocks.Add(p);
-                m_object_title.Text = "Content of " + node.FullName;
+                m_object_title.Text = "Content of " + blob.Path;
             }
             else
             {
@@ -78,28 +80,27 @@ namespace GitSharp.Demo
         {
             if (r == null)
                 return;
-            var obj = m_repository.OpenObject(r.ObjectId);
-            if (obj.Type == Constants.OBJ_COMMIT)
+            var obj = r.Target;
+            if (obj.IsCommit)
             {
-                DisplayCommit(m_repository.MapCommit(r.ObjectId), "Commit history of " + r.Name);
+                DisplayCommit(obj as Commit, "Commit history of " + r.Name);
                 return;
             }
-            else if (obj.Type == Constants.OBJ_TAG)
+            else if (obj.IsTag)
             {
-                var tag = m_repository.MapTag(r.Name, r.ObjectId);
-                if (tag.TagId == r.ObjectId) // it sometimes happens to have self referencing tags
+                var tag = obj as Tag;
+                if (tag.Target == tag) // it sometimes happens to have self referencing tags
                 {
                     return;
                 }
-                var tagged_commit = m_repository.MapCommit(tag.TagId);
-                DisplayCommit(tagged_commit, "Commit history of " + tag.TagName);
+                SelectTag(tag);
                 return;
             }
-            else if (obj.Type == Constants.OBJ_TREE)
+            else if (obj.IsTree)
             {
                 // hmm, display somehow
             }
-            else if (obj.Type == Constants.OBJ_BLOB)
+            else if (obj.IsBlob)
             {
                 // hmm, display somehow
             }
@@ -113,8 +114,10 @@ namespace GitSharp.Demo
         {
             if (tag == null)
                 return;
-            //if (tag.Object is Commit)
-            //    DisplayCommit(tag.Object as Commit, "Tag "+tag.Name);
+            if (tag.Target.IsCommit)
+                DisplayCommit(tag.Target as Commit, "Commit history of Tag " + tag.Name);
+            else
+                SelectObject(tag.Target);
         }
 
         private void OnSelectRepository(object sender, RoutedEventArgs e)
@@ -153,8 +156,8 @@ namespace GitSharp.Demo
         {
             if (commit == null)
                 return;
-            m_tree.ItemsSource = (commit.TreeEntry as Tree).Members;
-            m_tree_title.Text = "Repository tree of Commit " + commit.CommitId;
+            m_tree.ItemsSource = commit.Tree.Children;
+            m_tree_title.Text = "Repository tree of Commit " + commit.ShortHash;
             //(m_tree.ItemContainerGenerator.ContainerFromIndex(0) as TreeViewItem).IsExpanded = true;
         }
 
@@ -165,14 +168,14 @@ namespace GitSharp.Demo
 
         private void ReloadConfiguration()
         {
-            m_repository.Config.load();
+            //m_repository.Config.load();
             m_config_tree.ItemsSource = null;
             //m_config_tree.ItemsSource = m_repository.Config.Sections;
         }
 
         private void SaveConfiguration()
         {
-            m_repository.Config.save();
+            //m_repository.Config.save();
             ReloadConfiguration();
         }
 

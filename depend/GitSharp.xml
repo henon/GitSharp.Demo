@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GitSharp</name>
+    </assembly>
+    <members>
+        <member name="P:Git.AbstractObject.Hash">
+            <summary>
+            The object's SHA1 hash.
+            </summary>
+        </member>
+        <member name="P:Git.AbstractObject.ShortHash">
+            <summary>
+            the object's abbreviated SHA1 hash
+            </summary>
+        </member>
+        <member name="T:Git.BaseCommand">
+            <summary>
+            Abstract base class of all git commands. It provides basic infrastructure
+            </summary>
+        </member>
+        <member name="M:Git.BaseCommand.Execute">
+            <summary>
+            Execute the git command.
+            </summary>
+        </member>
+        <member name="P:Git.BaseCommand.GIT_DIR">
+            <summary>
+            Returns the value of the process' environment variable GIT_DIR
+            </summary>
+        </member>
+        <member name="P:Git.BaseCommand.OutputStream">
+            <summary>
+            This command's output stream. If not explicitly set, the command writes to Git.OutputStream out.
+            </summary>
+        </member>
+        <member name="P:Git.Commands.OutputStream">
+            <summary>
+            Get or set the output stream that all git commands are writing to. Per default this returns a StreamWriter wrapping the standard output stream.
+            </summary>
+        </member>
+        <member name="T:Git.Commit">
+            <summary>
+            Represents a revision of the content tracked in the repository.
+            </summary>
+        </member>
+        <member name="P:Git.Commit.Message">
+            <summary>
+            The commit message.
+            </summary>
+        </member>
+        <member name="P:Git.Commit.Author">
+            <summary>
+            The author of the change set represented by this commit. 
+            </summary>
+        </member>
+        <member name="P:Git.Commit.Committer">
+            <summary>
+            The person who committed the change set by reusing authorship information from another commit. If the commit was created by the author himself, Committer is equal to the Author.
+            </summary>
+        </member>
+        <member name="P:Git.Commit.AuthorDate">
+            <summary>
+            Original timestamp of the commit created by Author. 
+            </summary>
+        </member>
+        <member name="P:Git.Commit.CommitDate">
+            <summary>
+            Final timestamp of the commit, after Committer has re-committed Author's commit.
+            </summary>
+        </member>
+        <member name="P:Git.Commit.IsCommittedByAuthor">
+            <summary>
+            Returns true if the commit was created by the author of the change set himself.
+            </summary>
+        </member>
+        <member name="P:Git.Commit.Parents">
+            <summary>
+            Returns all parent commits.
+            </summary>
+        </member>
+        <member name="P:Git.Commit.HasParents">
+            <summary>
+            True if the commit has at least one parent.
+            </summary>
+        </member>
+        <member name="P:Git.Commit.Parent">
+            <summary>
+            The first parent commit if the commit has at least one parent, null otherwise.
+            </summary>
+        </member>
+        <member name="P:Git.Commit.Tree">
+            <summary>
+            The commit's reference to the root of the directory structure of the revision.
+            </summary>
+        </member>
+        <member name="T:Git.InitCommand">
+            <summary>
+            git-init - Create an empty git repository or reinitialize an existing one 
+            </summary>
+        </member>
+        <member name="M:Git.InitCommand.Execute">
+            <summary>
+            Execute the command.
+            </summary>
+        </member>
+        <member name="P:Git.InitCommand.Path">
+            <summary>
+            Get or set path to a directory that shall be initialized as a git repository. If Bare==false a ".git" subdirectory will be created in that directory.
+            Path overrides usage of GIT_DIR environment variable if set, otherwise Init uses the value of ActualPath.
+            </summary>
+        </member>
+        <member name="P:Git.InitCommand.ActualPath">
+            <summary>
+            Get the path where the Init command shall initialize the repository. Returns GIT_DIR environment variable (if set) or the current directory if Path is null. 
+            Returns the same value as Path otherwise.
+            </summary>
+        </member>
+        <member name="P:Git.InitCommand.Quiet">
+            <summary>
+            Only print error and warning messages, all other output will be suppressed. Is True by default.
+            </summary>
+        </member>
+        <member name="P:Git.InitCommand.Bare">
+            <summary>
+            Create a bare repository. If GIT_DIR environment is not set, it is set to the current working directory. Is False by default.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:Git.InitCommand.Template" -->
+        <member name="P:Git.InitCommand.Shared">
+            <summary>
+            NOT IMPLEMENTED!
+                Specify that the git repository is to be shared amongst several users. This allows users belonging to the same group to push into that repository. When specified, the config variable "core.sharedRepository" is set so that files and directories under $GIT_DIR are created with the requested permissions. When not specified, git will use permissions reported by umask(2).
+                The option can have the following values, defaulting to group if no value is given:
+                * umask (or false): Use permissions reported by umask(2). The default, when --shared is not specified.
+                * group (or true): Make the repository group-writable, (and g+sx, since the git group may be not the primary group of all users). This is used to loosen the permissions of an otherwise safe umask(2) value. Note that the umask still applies to the other permission bits (e.g. if umask is 0022, using group will not remove read privileges from other (non-group) users). See 0xxx for how to exactly specify the repository permissions.
+                * all (or world or everybody): Same as group, but make the repository readable by all users.
+                * 0xxx: 0xxx is an octal number and each file will have mode 0xxx. 0xxx will override users' umask(2) value (and not only loosen permissions as group and all does). 0640 will create a repository which is group-readable, but not group-writable or accessible to others. 0660 will create a repo that is readable and writable to the current user and group, but inaccessible to others.
+                By default, the configuration flag receive.denyNonFastForwards is enabled in shared repositories, so that you cannot force a non fast-forwarding push into it.
+            </summary>
+        </member>
+        <member name="P:Git.InitCommand.InitializedRepository">
+            <summary>
+            The repository that has been initialized. This property is only set after Execute has been called.
+            </summary>
+        </member>
+        <member name="T:Git.Options">
+            <summary>
+            Represents git command line options such as --version.
+            </summary>
+        </member>
+        <member name="P:Git.Options.Version">
+            <summary>
+            Returns the version of GitSharp.
+            </summary>
+        </member>
+        <member name="T:Git.Ref">
+            <summary>
+            Ref is a named symbolic reference that is a pointing to a specific git object. You can use Ref to dereference names 
+            such as "HEAD" or any branch or tag name.
+            </summary>
+        </member>
+        <member name="M:Git.Ref.IsValidName(System.String)">
+            <summary>
+            Check validity of a ref name. It must not contain character that has
+            a special meaning in a Git object reference expression. Some other
+            dangerous characters are also excluded.
+            </summary>
+            <param name="refName"></param>
+            <returns>
+            Returns true if <paramref name="refName"/> is a valid ref name.
+            </returns>
+        </member>
+        <member name="T:Git.Repository">
+            <summary>
+            Represents a git repository
+            </summary>
+        </member>
+        <member name="M:Git.Repository.#ctor(System.String)">
+            <summary>
+            Initializes the Repository object.
+            </summary>
+            <param name="path">Path to the local git repository.</param>
+        </member>
+        <member name="M:Git.Repository.IsValid(System.String)">
+            <summary>
+            Checks if the directory given by the path is a valid git repository.
+            </summary>
+            <param name="path"></param>
+            <returns>Returns true if the given path is a valid git repository, false otherwise.</returns>
+        </member>
+        <member name="M:Git.Repository.Init">
+            <summary>
+            Initializes a non-bare git repository in the current directory if GIT_DIR is not set.
+            </summary>
+            <returns>The initialized repository</returns>
+        </member>
+        <member name="M:Git.Repository.Init(System.String)">
+            <summary>
+            Initializes a non-bare git repository in the location path points to.
+            </summary>
+            <param name="path"></param>
+            <returns>The initialized repository</returns>
+        </member>
+        <member name="M:Git.Repository.Init(System.String,System.Boolean)">
+            <summary>
+            Initializes a directory in the current location.
+            </summary>
+            <param name="path"></param>
+            <param name="bare"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Git.Repository.Init(Git.InitCommand)">
+            <summary>
+            Initializes a directory in the current location using the provided git command's options.
+            </summary>
+            <param name="path"></param>
+            <param name="bare"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Git.Repository.Directory">
+            <summary>
+            Returns the path to the repository database (i.e. the .git directory).
+            </summary>
+        </member>
+        <member name="P:Git.Repository.Head">
+            <summary>
+            Head is a symbolic reference to the active commit on the active branch. You can dereference it to a commit.
+            </summary>
+        </member>
+        <member name="P:Git.Repository.IsBare">
+            <summary>
+            Returns true if this repository is a bare repository. Bare repositories don't have a working directory and thus do not support some operations.
+            </summary>
+        </member>
+        <member name="P:Git.Repository.WorkingDirectory">
+            <summary>
+            Returns the path to the working directory (i.e. the parent of the .git directory of a non-bare repo). Returns null if it is a bare repository.
+            </summary>
+        </member>
+        <member name="T:Git.Tree">
+            <summary>
+            Represents a directory in the git repository.
+            </summary>
+        </member>
+    </members>
+</doc>
