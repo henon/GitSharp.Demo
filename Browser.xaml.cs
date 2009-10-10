@@ -183,5 +183,16 @@ namespace GitSharp.Demo
         {
             SaveConfiguration();
         }
+
+        private void OnDiffSelectedCommits(object sender, RoutedEventArgs e)
+        {
+            var selection = m_commits.SelectedItems;
+            if (selection.Count < 2)
+                return;
+            var first_two=selection.Cast<Commit>().Take(2).ToArray();
+            var commit_diff = new CommitDiff();
+            commit_diff.Init(first_two[0], first_two[1]);
+            commit_diff.Show();
+        }
     }
 }

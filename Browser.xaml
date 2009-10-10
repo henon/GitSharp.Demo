@@ -25,144 +25,150 @@
             </StackPanel>
         </DataTemplate>-->
     </Window.Resources>
-            <DockPanel>
-                <Menu  DockPanel.Dock="Top">
-                    <MenuItem Header="Repository">
-                        <MenuItem Header="Open ..." Click="OnSelectRepository"/>
-                    </MenuItem>
-                </Menu>
-                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
-                    <Label>Path to repository:</Label>
-                    <TextBox Name="m_url_textbox">..\..\</TextBox>
-                    <Button Click="OnLoadRepository" Margin="5,0,0,0">Load</Button>
-                    <!--<Label Margin="10,0,0,0">Select a commit. Differences to the previous commit are highlited in red.</Label>-->
-                </StackPanel>
-                <TabControl SelectedIndex="0">
+    <DockPanel>
+        <Menu  DockPanel.Dock="Top">
+            <MenuItem Header="Repository">
+                <MenuItem Header="Open ..." Click="OnSelectRepository"/>
+            </MenuItem>
+        </Menu>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
+            <Label>Path to repository:</Label>
+            <TextBox Name="m_url_textbox">..\..\</TextBox>
+            <Button Click="OnLoadRepository" Margin="5,0,0,0">Load</Button>
+            <!--<Label Margin="10,0,0,0">Select a commit. Differences to the previous commit are highlited in red.</Label>-->
+        </StackPanel>
+        <TabControl SelectedIndex="0">
 
-                    <!--commit browser-->
-                    <TabItem Header="Browser">
-                        <Grid Margin="0,10,0,0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition Height="2"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-
-
-                            <!--upper half-->
+            <!--commit browser-->
+            <TabItem Header="Browser">
+                <Grid Margin="0,10,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="2"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
 
 
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="2"/>
-                                    <ColumnDefinition Width="3*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!--tags and branches-->
-                                <DockPanel Margin="0">
-                                    <TextBlock DockPanel.Dock="Top" Background="Silver" Name="m_refs_title">Branches and Tags</TextBlock>
-                                    <ListView Name="m_refs" DockPanel.Dock="Top">
-                                        <ListView.View>
-                                            <GridView>
-                                                <GridView.Columns>
-                                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}"/>
-                                                    <GridViewColumn Header="SHA" DisplayMemberBinding="{Binding Path=ObjectId}"/>
-                                                    <!--<GridViewColumn Header="Pointing to" DisplayMemberBinding="{Binding Path=PeeledObjectId}"/>-->
-                                                    <GridViewColumn Header="OriginalName" DisplayMemberBinding="{Binding Path=OriginalName}"/>
-                                                    <GridViewColumn Header="Detached" DisplayMemberBinding="{Binding Path=Detached}"/>
-                                                    <GridViewColumn Header="Storage" DisplayMemberBinding="{Binding Path=StorageFormat.Name}"/>
-                                                </GridView.Columns>
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
-
-                                </DockPanel>
-
-                                <!--commits-->
-                                <DockPanel Grid.Column="2">
-                                    <TextBlock DockPanel.Dock="Top" Background="Silver" Name="m_commit_title">Commit history for</TextBlock>
-                                    <ListView Name="m_commits" DockPanel.Dock="Top">
-                                        <ListView.View>
-                                            <GridView>
-                                                <GridView.Columns>
-                                                    <GridViewColumn Header="SHA" DisplayMemberBinding="{Binding Path=CommitId}" />
-                                                    <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Path=Message}"/>
-                                                    <GridViewColumn Header="Committer" DisplayMemberBinding="{Binding Path=Committer.Name}"/>
-                                                    <GridViewColumn Header="CommitedDate" DisplayMemberBinding="{Binding Path=Committer.When}"/>
-                                                    <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Path=Author.Name}"/>
-                                                    <GridViewColumn Header="AuthoredDate" DisplayMemberBinding="{Binding Path=Author.When}"/>
-                                                </GridView.Columns>
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
-                                </DockPanel>
-                                <GridSplitter Width="2" Grid.Column="1" ResizeBehavior="PreviousAndNext"/>
-
-                            </Grid>
-                            <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" Height="2"/>
+                    <!--upper half-->
 
 
-                            <!--lower half-->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!--tags and branches-->
+                        <DockPanel Margin="0">
+                            <TextBlock DockPanel.Dock="Top" Background="Silver" Name="m_refs_title">Branches and Tags</TextBlock>
+                            <ListView Name="m_refs" DockPanel.Dock="Top">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridView.Columns>
+                                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}"/>
+                                            <GridViewColumn Header="SHA" DisplayMemberBinding="{Binding Path=ObjectId}"/>
+                                            <!--<GridViewColumn Header="Pointing to" DisplayMemberBinding="{Binding Path=PeeledObjectId}"/>-->
+                                            <GridViewColumn Header="OriginalName" DisplayMemberBinding="{Binding Path=OriginalName}"/>
+                                            <GridViewColumn Header="Detached" DisplayMemberBinding="{Binding Path=Detached}"/>
+                                            <GridViewColumn Header="Storage" DisplayMemberBinding="{Binding Path=StorageFormat.Name}"/>
+                                        </GridView.Columns>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+
+                        </DockPanel>
+
+                        <!--commits-->
+                        <DockPanel Grid.Column="2">
+                            <TextBlock DockPanel.Dock="Top" Background="Silver" Name="m_commit_title">Commit history for</TextBlock>
+                            <TextBlock DockPanel.Dock="Top" Background="Silver" >(Select two  commits to compare them via right click menu)</TextBlock>
+                            <ListView Name="m_commits" DockPanel.Dock="Top">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridView.Columns>
+                                            <GridViewColumn Header="Hash" DisplayMemberBinding="{Binding Path=ShortHash}" />
+                                            <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Path=Message}"/>
+                                            <GridViewColumn Header="Committer" DisplayMemberBinding="{Binding Path=Committer.Name}"/>
+                                            <GridViewColumn Header="CommitedDate" DisplayMemberBinding="{Binding Path=CommitDate}"/>
+                                            <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Path=Author.Name}"/>
+                                            <GridViewColumn Header="AuthoredDate" DisplayMemberBinding="{Binding Path=AuthorDate}"/>
+                                        </GridView.Columns>
+                                    </GridView>
+                                </ListView.View>
+                                <ListView.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Diff selected commits" Name="m_diff_selected_commits" Click="OnDiffSelectedCommits"/>
+                                    </ContextMenu>
+                                </ListView.ContextMenu>
+                            </ListView>
+                        </DockPanel>
+                        <GridSplitter Width="2" Grid.Column="1" ResizeBehavior="PreviousAndNext"/>
+
+                    </Grid>
+                    <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" Height="2"/>
 
 
-                            <Grid Grid.Row="2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="2"/>
-                                    <ColumnDefinition Width="3*"/>
-                                </Grid.ColumnDefinitions>
-                                <!--tree-->
-                                <DockPanel  Grid.Column="0">
-                                    <TextBlock DockPanel.Dock="Top" Background="Silver" Name="m_tree_title">Repository</TextBlock>
-                                    <TreeView Name="m_tree"/>
-                                </DockPanel>
+                    <!--lower half-->
 
-                                <GridSplitter ResizeBehavior="PreviousAndNext" Width="2" Grid.Column="1"/>
-                                <!--object-->
-                                <DockPanel  Grid.Column="2">
-                                    <TextBlock DockPanel.Dock="Top" Background="Silver" Name="m_object_title">Object</TextBlock>
-                                    <RichTextBox Name="m_object" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
-                                </DockPanel>
 
-                            </Grid>
-                        </Grid>
-                    </TabItem>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+                        <!--tree-->
+                        <DockPanel  Grid.Column="0">
+                            <TextBlock DockPanel.Dock="Top" Background="Silver" Name="m_tree_title">Repository</TextBlock>
+                            <TreeView Name="m_tree"/>
+                        </DockPanel>
 
-                    <!--config-->
-                    <TabItem Header="Configuration">
-                        <DockPanel>
-                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="4">
-                                <Button Click="OnLoadConfiguration">Load</Button>
-                                <Button Click="OnSaveConfiguration">Save</Button>
-                            </StackPanel>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"/>
-                                    <!--<ColumnDefinition Width="2"/>
+                        <GridSplitter ResizeBehavior="PreviousAndNext" Width="2" Grid.Column="1"/>
+                        <!--object-->
+                        <DockPanel  Grid.Column="2">
+                            <TextBlock DockPanel.Dock="Top" Background="Silver" Name="m_object_title">Object</TextBlock>
+                            <RichTextBox Name="m_object" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+                        </DockPanel>
+
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <!--config-->
+            <TabItem Header="Configuration">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="4">
+                        <Button Click="OnLoadConfiguration">Load</Button>
+                        <Button Click="OnSaveConfiguration">Save</Button>
+                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <!--<ColumnDefinition Width="2"/>
                         <ColumnDefinition Width="1*"/>-->
-                                </Grid.ColumnDefinitions>
+                        </Grid.ColumnDefinitions>
 
-                                <!--config tree-->
-                                <DockPanel  Grid.Column="0">
-                                    <TextBlock DockPanel.Dock="Top" Background="Silver">Configuration</TextBlock>
-                                    <TreeView Name="m_config_tree">
+                        <!--config tree-->
+                        <DockPanel  Grid.Column="0">
+                            <TextBlock DockPanel.Dock="Top" Background="Silver">Configuration</TextBlock>
+                            <TreeView Name="m_config_tree">
 
-                                    </TreeView>
-                                </DockPanel>
+                            </TreeView>
+                        </DockPanel>
 
-                                <!--config editor-->
-                                <!--<DockPanel Grid.Column="2" >
+                        <!--config editor-->
+                        <!--<DockPanel Grid.Column="2" >
                         <TextBlock DockPanel.Dock="Top" Background="Silver">Edit ... </TextBlock>
                         <Label Name="m_config_name" DockPanel.Dock="Top" ></Label>
                         <TextBox Name="m_config_value" DockPanel.Dock="Top" ></TextBox>
                     </DockPanel>
                     <GridSplitter Width="2" Grid.Column="1" ResizeBehavior="PreviousAndNext"/>-->
-                            </Grid>
-                        </DockPanel>
-                    </TabItem>
+                    </Grid>
+                </DockPanel>
+            </TabItem>
 
-                </TabControl>
-            </DockPanel>
+        </TabControl>
+    </DockPanel>
 
 </Window>

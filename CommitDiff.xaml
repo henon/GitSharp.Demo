@@ -1,0 +1,29 @@
+﻿<Window x:Class="GitSharp.Demo.CommitDiff"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:demo="clr-namespace:GitSharp.Demo"
+    Title="Commit Diff" Height="400" Width="600">
+    <Window.Resources>
+        <demo:ChangeColorConverter x:Key="ChangeColorConverter"/>
+    </Window.Resources>
+    <DockPanel>
+        <Label Name="m_title" FontSize="16" DockPanel.Dock="Top">Differences between commits ...</Label>
+        <ListView Name="m_treediff" DockPanel.Dock="Top">
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn Header="Change">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=ChangeName}" Foreground="{Binding Converter={StaticResource ChangeColorConverter}}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn> 
+                        <GridViewColumn Header="Path" DisplayMemberBinding="{Binding Path=Path}" />
+                        <GridViewColumn Header="Hash" DisplayMemberBinding="{Binding Path=ChangedObject.ShortHash}" />
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+         </ListView>
+    </DockPanel>
+</Window>
