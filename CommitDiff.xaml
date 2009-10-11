@@ -15,7 +15,7 @@
                         <GridViewColumn Header="Change">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Path=ChangeName}" Foreground="{Binding Converter={StaticResource ChangeColorConverter}}"/>
+                                    <TextBlock Text="{Binding Path=ChangeType}" Foreground="{Binding Converter={StaticResource ChangeColorConverter}}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn> 

@@ -41,13 +41,13 @@ namespace GitSharp.Demo
             var change = value as Change;
             if (change == null)
                 return Brushes.Black;
-            switch (change.ChangeName)
+            switch (change.ChangeType)
             {
-                case "Added":
+                case ChangeType.Added:
                     return Brushes.Plum;
-                case "Deleted":
+                case ChangeType.Deleted:
                     return Brushes.Red;
-                case "Modified":
+                case ChangeType.Modified:
                     return Brushes.RoyalBlue;
                 default:
                     return Brushes.Black;
