@@ -152,9 +152,16 @@
                         <!--config tree-->
                         <DockPanel  Grid.Column="0">
                             <TextBlock DockPanel.Dock="Top" Background="Silver">Configuration</TextBlock>
-                            <TreeView Name="m_config_tree">
-
-                            </TreeView>
+                            <ListView Name="m_config" DockPanel.Dock="Top">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridView.Columns>
+                                            <GridViewColumn Header="Key" DisplayMemberBinding="{Binding Path=Key}" />
+                                            <GridViewColumn Header="Value" DisplayMemberBinding="{Binding Path=Value}"/>
+                                        </GridView.Columns>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
                         </DockPanel>
 
                         <!--config editor-->

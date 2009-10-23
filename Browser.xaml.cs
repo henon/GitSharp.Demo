@@ -169,7 +169,7 @@ namespace GitSharp.Demo
         private void ReloadConfiguration()
         {
             //m_repository.Config.load();
-            m_config_tree.ItemsSource = null;
+            m_config.ItemsSource = m_repository.Config;
             //m_config_tree.ItemsSource = m_repository.Config.Sections;
         }
 
