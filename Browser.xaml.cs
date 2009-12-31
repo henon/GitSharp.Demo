@@ -194,5 +194,13 @@ namespace GitSharp.Demo
             commit_diff.Init(first_two[0], first_two[1]);
             commit_diff.Show();
         }
+
+      
+
+        private void Onlick(object sender, RoutedEventArgs e)
+        {
+            //Closing application
+            this.Close();
+        }
     }
 }
