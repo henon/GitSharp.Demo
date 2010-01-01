@@ -10,7 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Git;
+using GitSharp;
 
 namespace GitSharp.Demo
 {
@@ -29,6 +29,12 @@ namespace GitSharp.Demo
             m_title.Content = "Differences between commits " + c1.ShortHash + " and " + c2.ShortHash;
             var changes=c1.CompareAgainst(c2);
             m_treediff.ItemsSource = changes;
+        }
+
+        private void onClose(object sender, RoutedEventArgs e)
+        {
+            //Closing application
+            this.Close();
         }
     }
 

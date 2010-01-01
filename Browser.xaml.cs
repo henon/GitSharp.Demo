@@ -16,7 +16,7 @@ using System.Collections.ObjectModel;
 using Microsoft.Win32;
 using System.Reflection;
 using System.Diagnostics;
-using Git;
+
 
 namespace GitSharp.Demo
 {
@@ -33,7 +33,7 @@ namespace GitSharp.Demo
             //m_config_tree.SelectedItemChanged += (o, args) => SelectConfiguration(m_config_tree.SelectedItem);
         }
 
-
+        Configuration configurationWindow = new Configuration();
         Repository m_repository;
 
         // load
@@ -48,7 +48,8 @@ namespace GitSharp.Demo
             //var branches = repo.Branches.Values.Select(@ref => repo.MapCommit(@ref.ObjectId));
             m_refs.ItemsSource = repo.Refs.Values;
             DisplayCommit(head, "HEAD");
-            ReloadConfiguration();
+            //ReloadConfiguration();
+            configurationWindow.Init(m_repository);
         }
 
         private void SelectObject(AbstractObject node)
@@ -161,28 +162,7 @@ namespace GitSharp.Demo
             //(m_tree.ItemContainerGenerator.ContainerFromIndex(0) as TreeViewItem).IsExpanded = true;
         }
 
-        private void OnLoadConfiguration(object sender, RoutedEventArgs e)
-        {
-            ReloadConfiguration();
-        }
-
-        private void ReloadConfiguration()
-        {
-            //m_repository.Config.load();
-            m_config.ItemsSource = m_repository.Config;
-            //m_config_tree.ItemsSource = m_repository.Config.Sections;
-        }
-
-        private void SaveConfiguration()
-        {
-            //m_repository.Config.save();
-            ReloadConfiguration();
-        }
-
-        private void OnSaveConfiguration(object sender, RoutedEventArgs e)
-        {
-            SaveConfiguration();
-        }
+    
 
         private void OnDiffSelectedCommits(object sender, RoutedEventArgs e)
         {
@@ -197,10 +177,17 @@ namespace GitSharp.Demo
 
       
 
-        private void Onlick(object sender, RoutedEventArgs e)
+        private void OnClose(object sender, RoutedEventArgs e)
         {
             //Closing application
             this.Close();
+        }
+
+        private void OnOpenRepositoryConfiguration(object sender, RoutedEventArgs e)
+        {
+           
+            
+            configurationWindow.Show();
         }
     }
 }
