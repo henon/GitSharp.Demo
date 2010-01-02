@@ -48,8 +48,7 @@ namespace GitSharp.Demo
             //var branches = repo.Branches.Values.Select(@ref => repo.MapCommit(@ref.ObjectId));
             m_refs.ItemsSource = repo.Refs.Values;
             DisplayCommit(head, "HEAD");
-            //ReloadConfiguration();
-            configurationWindow.Init(m_repository);
+            configurationWindow.Init(m_repository);            
         }
 
         private void SelectObject(AbstractObject node)
@@ -172,22 +171,26 @@ namespace GitSharp.Demo
             var first_two=selection.Cast<Commit>().Take(2).ToArray();
             var commit_diff = new CommitDiff();
             commit_diff.Init(first_two[0], first_two[1]);
-            commit_diff.Show();
+            commit_diff.ShowDialog();
         }
 
       
 
-        private void OnClose(object sender, RoutedEventArgs e)
+        private void OnMenuClose(object sender, RoutedEventArgs e)
         {
-            //Closing application
-            this.Close();
+            configurationWindow.Close();
+            this.Close();          
         }
 
+     
         private void OnOpenRepositoryConfiguration(object sender, RoutedEventArgs e)
         {
-           
-            
-            configurationWindow.Show();
+            configurationWindow.ShowDialog();
+        }    
+
+        private void Browser_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            configurationWindow.Close();
         }
     }
 }
