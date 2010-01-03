@@ -39,9 +39,9 @@
     <Window x:Class="GitSharp.Demo.Browser"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:g="clr-namespace:GitSharp;assembly=GitSharp"
-        xmlns:HistoryGraph="clr-namespace:GitSharp.Demo.HistoryGraph"
-    Title="Repository Browser" MinHeight="300" MinWidth="640" Width="840" Height="400">
+    xmlns:g="clr-namespace:GitSharp;assembly=GitSharp"
+    xmlns:HistoryGraph="clr-namespace:GitSharp.Demo.HistoryGraph"
+    Title="Repository Browser" MinHeight="300" MinWidth="640" Width="840" Height="400" Closing="Browser_Closing">
 
     <Window.Resources>
         <!--repository tree templates-->
@@ -69,7 +69,7 @@
             <MenuItem Header="File" >
                 <MenuItem Header="Open repository..." Click="OnSelectRepository"/>
                 <Separator />
-                <MenuItem Header="Close" Click="OnClose" />
+                <MenuItem Header="Close" Click="OnMenuClose" />
             </MenuItem>
             <MenuItem Header="Edit" >
                 <MenuItem Header="Repository configuration..." Click="OnOpenRepositoryConfiguration"/>

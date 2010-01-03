@@ -55,7 +55,6 @@ namespace GitSharp.Demo
             m_tree.SelectedItemChanged += (o, args) => SelectObject(m_tree.SelectedValue as AbstractObject);
             //m_config_tree.SelectedItemChanged += (o, args) => SelectConfiguration(m_config_tree.SelectedItem);
             m_history_graph.CommitClicked += SelectCommit;
-            Closed += (o, args) => Application.Current.Shutdown(0);
         }
 
         Configuration configurationWindow = new Configuration();
@@ -198,22 +197,26 @@ namespace GitSharp.Demo
             var first_two=selection.Cast<Commit>().Take(2).ToArray();
             var commit_diff = new CommitDiff();
             commit_diff.Init(first_two[0], first_two[1]);
-            commit_diff.Show();
+            commit_diff.ShowDialog();
         }
 
       
 
-        private void OnClose(object sender, RoutedEventArgs e)
+        private void OnMenuClose(object sender, RoutedEventArgs e)
         {
-            //Closing application
-            this.Close();
+            configurationWindow.Close();
+            this.Close();          
         }
 
+     
         private void OnOpenRepositoryConfiguration(object sender, RoutedEventArgs e)
         {
-           
-            
-            configurationWindow.Show();
+            configurationWindow.ShowDialog();
+        }    
+
+        private void Browser_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            configurationWindow.Close();
         }
     }
 }
