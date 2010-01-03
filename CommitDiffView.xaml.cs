@@ -43,27 +43,32 @@ using System.Windows.Media;
 namespace GitSharp.Demo
 {
     /// <summary>
-    /// Interaction logic for CommitDiff.xaml
+    /// Interaction logic for CommitDiffView.xaml
     /// </summary>
-    public partial class CommitDiff : Window
+    public partial class CommitDiffView 
     {
-        public CommitDiff()
+        public CommitDiffView()
         {
             InitializeComponent();
         }
 
         public void Init(Commit c1, Commit c2)
         {
-            m_title.Content = "Differences between commits " + c1.ShortHash + " and " + c2.ShortHash;
+            if (c1==null)
+            {
+                m_treediff.ItemsSource = null;
+                return;
+            }
+            //m_title.Content = "Differences between commits " + c1.ShortHash + " and " + c2.ShortHash;
             var changes=c1.CompareAgainst(c2);
             m_treediff.ItemsSource = changes;
         }
 
-        private void onClose(object sender, RoutedEventArgs e)
-        {
-            //Closing application
-            this.Close();
-        }
+        //private void onClose(object sender, RoutedEventArgs e)
+        //{
+        //    //Closing application
+        //    this.Close();
+        //}
     }
 
     public class ChangeColorConverter : IValueConverter
