@@ -1,5 +1,5 @@
-Git# is Copyright (C) 2007-2009 by the Git Development Community
-See source file headers for specific contributor copyrights
+GitSharp.Demo is Copyright (C) 2009 by the authors listed in each file.
+See source file headers for the respective contributor copyrights.
 
 All rights reserved.
 
@@ -15,7 +15,7 @@ conditions are met:
   disclaimer in the documentation and/or other materials provided
   with the distribution.
 
-- Neither the name of the Git Development Community nor the
+- Neither the name of the project nor the
   names of its contributors may be used to endorse or promote
   products derived from this software without specific prior
   written permission.
