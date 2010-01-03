@@ -40,7 +40,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:demo="clr-namespace:GitSharp.Demo"
-    MinWidth="450" Height="307" Width="450">
+    MinWidth="200" MinHeight="100" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
     <!--Title="Commit Diff"-->
     <UserControl.Resources>
         <demo:ChangeColorConverter x:Key="ChangeColorConverter"/>
@@ -65,8 +65,8 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Path" DisplayMemberBinding="{Binding Path=Path}" />
-                        <GridViewColumn Header="Hash" DisplayMemberBinding="{Binding Path=ChangedObject.ShortHash}" />
+                        <GridViewColumn Header="Path" DisplayMemberBinding="{Binding Path=Path}" Width="200"/>
+                        <!--<GridViewColumn Header="Hash" DisplayMemberBinding="{Binding Path=ChangedObject.ShortHash}" />-->
                     </GridView.Columns>
                 </GridView>
             </ListView.View>

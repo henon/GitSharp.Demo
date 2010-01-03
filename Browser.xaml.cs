@@ -44,17 +44,18 @@ using System.Diagnostics;
 namespace GitSharp.Demo
 {
 
-    public partial class Browser : Window
+    public partial class Browser
     {
         public Browser()
         {
             InitializeComponent();
-            m_commits.SelectionChanged += (o, args) => SelectCommit(m_commits.SelectedItem as Commit);
+            //m_commits.SelectionChanged += (o, args) => SelectCommit(m_commits.SelectedItem as Commit);
             //m_branches.SelectionChanged += (o, args) => SelectBranch(m_branches.SelectedItem as Branch);
-            m_refs.SelectionChanged += (o, args) => SelectRef(m_refs.SelectedItem as Ref);
+            //m_refs.SelectionChanged += (o, args) => SelectRef(m_refs.SelectedItem as Ref);
             m_tree.SelectedItemChanged += (o, args) => SelectObject(m_tree.SelectedValue as AbstractObject);
             //m_config_tree.SelectedItemChanged += (o, args) => SelectConfiguration(m_config_tree.SelectedItem);
             m_history_graph.CommitClicked += SelectCommit;
+            LoadRepository(m_url_textbox.Text);
         }
 
         Configuration configurationWindow = new Configuration();
@@ -64,14 +65,21 @@ namespace GitSharp.Demo
         private void OnLoadRepository(object sender, RoutedEventArgs e)
         {
             var url = m_url_textbox.Text;
+            LoadRepository(url);
+        }
+
+        private void LoadRepository(string url)
+        {
+            if (!Repository.IsValid(url))
+                MessageBox.Show("Given path doesn't seem to point to a git repository: " + url);
             var repo = new Repository(url);
             var head = repo.Head.Target as Commit;
-            Debug.Assert(head is Commit);
+            Debug.Assert(head != null);
             m_repository = repo;
             //var tags = repo.getTags().Values.Select(@ref => repo.MapTag(@ref.Name, @ref.ObjectId));
             //var branches = repo.Branches.Values.Select(@ref => repo.MapCommit(@ref.ObjectId));
-            m_refs.ItemsSource = repo.Refs.Values;
-            DisplayCommit(head, "HEAD");
+            //m_refs.ItemsSource = repo.Refs.Values;
+            SelectCommit(head);
             m_history_graph.Update(repo);
             //ReloadConfiguration();
             configurationWindow.Init(m_repository);
@@ -87,7 +95,7 @@ namespace GitSharp.Demo
                 var p = new Paragraph();
                 p.Inlines.Add(text);
                 m_object.Document.Blocks.Add(p);
-                m_object_title.Text = "Content of " + blob.Path;
+                m_object_title.Content = "Content of " + blob.Path;
             }
             else
             {
@@ -153,6 +161,7 @@ namespace GitSharp.Demo
             if (dlg.ShowDialog() ==  System.Windows.Forms.DialogResult.OK)
             {
                 m_url_textbox.Text = dlg.SelectedPath;
+                LoadRepository(m_url_textbox.Text);
             }
         }
 
@@ -171,19 +180,21 @@ namespace GitSharp.Demo
         {
             if (commit == null)
                 return;
-            var list = commit.Ancestors.ToList();
-            list.Insert(0, commit);
-            m_commits.ItemsSource = list;
-            m_commits.SelectedIndex = 0;
-            m_commit_title.Text = "Commit history for " + info;
+            //var list = commit.Ancestors.ToList();
+            //list.Insert(0, commit);
+            //m_commits.ItemsSource = list;
+            //m_commits.SelectedIndex = 0;
         }
 
         private void SelectCommit(Commit commit)
         {
             if (commit == null || commit.Tree == null)
                 return;
+            m_commit_view.Commit = commit;
             m_tree.ItemsSource = commit.Tree.Children;
-            m_tree_title.Text = "Repository tree of Commit " + commit.ShortHash;
+            m_tree_title.Content = "Repository tree of Commit " + commit.ShortHash;
+            m_commit_diff.Init(commit.Parent, commit);
+            //m_commit_title.Text = "Commit history for " + info;
             //(m_tree.ItemContainerGenerator.ContainerFromIndex(0) as TreeViewItem).IsExpanded = true;
         }
 
@@ -191,13 +202,13 @@ namespace GitSharp.Demo
 
         private void OnDiffSelectedCommits(object sender, RoutedEventArgs e)
         {
-            var selection = m_commits.SelectedItems;
-            if (selection.Count < 2)
-                return;
-            var first_two=selection.Cast<Commit>().Take(2).ToArray();
-            var commit_diff = new CommitDiff();
-            commit_diff.Init(first_two[0], first_two[1]);
-            commit_diff.ShowDialog();
+            //var selection = m_commits.SelectedItems;
+            //if (selection.Count < 2)
+            //    return;
+            //var first_two=selection.Cast<Commit>().Take(2).ToArray();
+            //var commit_diff = new CommitDiffView();
+            //commit_diff.Init(first_two[0], first_two[1]);
+            //commit_diff.ShowDialog();
         }
 
       

@@ -76,13 +76,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="CommitDiff.xaml">
+    <Page Include="CommitDiffView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CommitSummaryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Configuration.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DockPanelSplitter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="HistoryGraph\HistoryGraphView.xaml">
       <SubType>Designer</SubType>
@@ -98,11 +106,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommitDiff.xaml.cs">
-      <DependentUpon>CommitDiff.xaml</DependentUpon>
+    <Compile Include="CommitDiffView.xaml.cs">
+      <DependentUpon>CommitDiffView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CommitSummaryView.xaml.cs">
+      <DependentUpon>CommitSummaryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Configuration.xaml.cs">
       <DependentUpon>Configuration.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DockPanelSplitter.xaml.cs">
+      <DependentUpon>DockPanelSplitter.xaml</DependentUpon>
     </Compile>
     <Compile Include="HistoryGraph\PlotRenderer.cs" />
     <Compile Include="HistoryGraph\HistoryGraphView.xaml.cs">
