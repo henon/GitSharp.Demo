@@ -1,27 +1,31 @@
 ﻿<UserControl x:Class="GitSharp.Demo.CommitSummaryView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Demo="clr-namespace:GitSharp.Demo"
     MinHeight="100" MinWidth="300">
+    <UserControl.Resources>
+        <Demo:AuthorConverter x:Key="AuthorConverter"/>
+    </UserControl.Resources>
     <DockPanel LastChildFill="False">
         <!--id-->
         <DockPanel DockPanel.Dock="Top">
             <Label Width="60" HorizontalContentAlignment="Right" Margin="0,0,5,0">Hash:</Label>
-            <TextBox Text="{Binding Commit.Hash, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0"/>
+            <TextBox Text="{Binding Commit.Hash, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0" VerticalAlignment="Center"/>
         </DockPanel>
         <!--Message -->
         <DockPanel DockPanel.Dock="Top">
             <Label Width="60" VerticalAlignment="Top" HorizontalContentAlignment="Right"  Margin="0,0,5,0">Message:</Label>
-            <TextBox Text="{Binding Commit.Message, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0" TextWrapping="WrapWithOverflow" MaxHeight="100" VerticalScrollBarVisibility="Auto"  FontWeight="bold" />
+            <TextBox Text="{Binding Commit.Message, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0" TextWrapping="WrapWithOverflow" MaxHeight="100" VerticalScrollBarVisibility="Auto"  FontWeight="bold" VerticalAlignment="Center"/>
         </DockPanel>
         <!--Who -->
         <DockPanel DockPanel.Dock="Top">
             <Label Width="60" VerticalAlignment="Top" HorizontalContentAlignment="Right" Margin="0,0,5,0">Author:</Label>
-            <TextBox Text="{Binding Commit.Author, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0" TextWrapping="WrapWithOverflow" MaxHeight="100" VerticalScrollBarVisibility="Auto"/>
+            <TextBox Text="{Binding Commit.Author, Mode=OneWay, Converter={StaticResource AuthorConverter}}" IsReadOnly="True" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0" TextWrapping="WrapWithOverflow" MaxHeight="100" VerticalScrollBarVisibility="Auto"  VerticalAlignment="Center"/>
         </DockPanel>
         <!--When -->
         <DockPanel DockPanel.Dock="Top">
             <Label Width="60" VerticalAlignment="Top" HorizontalContentAlignment="Right" Margin="0,0,5,0">Time:</Label>
-            <TextBox Text="{Binding Commit.AuthorDate, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0" TextWrapping="WrapWithOverflow" MaxHeight="100" VerticalScrollBarVisibility="Auto"/>
+            <TextBox Text="{Binding Commit.AuthorDate, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0" TextWrapping="WrapWithOverflow" MaxHeight="100" VerticalScrollBarVisibility="Auto"  VerticalAlignment="Center"/>
         </DockPanel>
     </DockPanel>
 </UserControl>

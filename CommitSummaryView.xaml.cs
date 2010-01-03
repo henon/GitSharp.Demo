@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -45,4 +46,27 @@ namespace GitSharp.Demo
 
         #endregion
     }
+
+
+    #region --> Author display converter
+
+
+    [ValueConversion(typeof(string), typeof(Author))]
+    public class AuthorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null)
+                return "Error. Author shouldn't be null.";
+            var author = value as Author;
+            return author.Name + " <" + author.EmailAddress + ">";
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+
+    #endregion
 }
