@@ -35,7 +35,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
+using System.IO;
 using System.Linq;
+using System.Security;
 using System.Windows;
 using System.Windows.Documents;
 using System.Diagnostics;
@@ -68,11 +71,68 @@ namespace GitSharp.Demo
             LoadRepository(url);
         }
 
+        /// <summary>
+        /// Performs upward recursive lookup to return git directory. Honors the environment variable GIT_DIR.
+        /// </summary>
+        /// <returns></returns>
+        public static string FindGitDirectory(string directory) // TODO: move to gitsharp api
+        {
+            string git_dir = Environment.GetEnvironmentVariable("GIT_DIR");
+
+            if ((directory == null || !new FileInfo(directory).Exists) && git_dir != null)
+                return git_dir;
+            try
+            {
+                if (directory == null)
+                    directory = Directory.GetCurrentDirectory();
+
+                while (directory != null)
+                {
+                    var git = Path.Combine(directory, ".git");
+                    if (Directory.Exists(git))
+                        return git;
+
+                    //Get parent directory
+                    var parent_directory = Path.Combine(directory, "..");
+                    parent_directory = Path.GetFullPath(parent_directory);
+                    if (parent_directory == directory) // <-- we have reached a toplevel directory which doesn't contain a .git dir.
+                        return null;
+                    directory = parent_directory;
+                }
+            }
+            catch (ArgumentException) // --> invalid path form
+            {
+                return null;
+            }
+            catch (SecurityException) // --> access denied
+            {
+                return null;
+            }
+            catch (UnauthorizedAccessException) // --> access denied
+            {
+                return null;
+            }
+            catch (PathTooLongException)
+            {
+                return null;
+            }
+            catch (NotSupportedException) // --> hmm?
+            {
+                return null;
+            }
+            return directory;
+        }
+
         private void LoadRepository(string url)
         {
-            if (!Repository.IsValid(url))
+            var git_url = FindGitDirectory(url);
+            if (git_url==null || !Repository.IsValid(git_url))
+            {
                 MessageBox.Show("Given path doesn't seem to point to a git repository: " + url);
-            var repo = new Repository(url);
+                return;
+            }
+            var repo = new Repository(git_url);
+            m_url_textbox.Text = git_url;
             var head = repo.Head.Target as Commit;
             Debug.Assert(head != null);
             m_repository = repo;
@@ -140,7 +200,7 @@ namespace GitSharp.Demo
             }
             else
             {
-                Debug.Fail("don't know how to display this object: "+obj.ToString());
+                Debug.Fail("don't know how to display this object: " + obj.ToString());
             }
         }
 
@@ -158,7 +218,7 @@ namespace GitSharp.Demo
         {
             var dlg = new System.Windows.Forms.FolderBrowserDialog();
             //dlg.CheckPathExists = true;
-            if (dlg.ShowDialog() ==  System.Windows.Forms.DialogResult.OK)
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 m_url_textbox.Text = dlg.SelectedPath;
                 LoadRepository(m_url_textbox.Text);
@@ -198,7 +258,7 @@ namespace GitSharp.Demo
             //(m_tree.ItemContainerGenerator.ContainerFromIndex(0) as TreeViewItem).IsExpanded = true;
         }
 
-    
+
 
         private void OnDiffSelectedCommits(object sender, RoutedEventArgs e)
         {
@@ -211,19 +271,19 @@ namespace GitSharp.Demo
             //commit_diff.ShowDialog();
         }
 
-      
+
 
         private void OnMenuClose(object sender, RoutedEventArgs e)
         {
             configurationWindow.Close();
-            this.Close();          
+            this.Close();
         }
 
-     
+
         private void OnOpenRepositoryConfiguration(object sender, RoutedEventArgs e)
         {
             configurationWindow.ShowDialog();
-        }    
+        }
 
         private void Browser_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
