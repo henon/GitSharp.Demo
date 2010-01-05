@@ -481,22 +481,6 @@
             </summary>
             <param name="path">Path to the local git repository.</param>
         </member>
-        <member name="M:GitSharp.Repository.IsValid(System.String)">
-            <summary>
-            Checks if the directory given by the path is a valid non-bare git repository. The given path may either point to 
-            the working directory or the repository's .git directory.
-            </summary>
-            <param name="path"></param>
-            <returns>Returns true if the given path is a valid git repository, false otherwise.</returns>
-        </member>
-        <member name="M:GitSharp.Repository.IsValid(System.String,System.Boolean)">
-            <summary>
-            Checks if the directory given by the path is a valid git repository.
-            </summary>
-            <param name="path"></param>
-            <param name="bare"></param>
-            <returns>Returns true if the given path is a valid git repository, false otherwise.</returns>
-        </member>
         <member name="M:GitSharp.Repository.CheckoutBranch(System.String)">
             <summary>
             Check out the branch with the given name
@@ -544,6 +528,31 @@
             </summary>
             <param name="cmd"></param>
             <returns></returns>
+        </member>
+        <member name="M:GitSharp.Repository.IsValid(System.String)">
+            <summary>
+            Checks if the directory given by the path is a valid non-bare git repository. The given path may either point to 
+            the working directory or the repository's .git directory.
+            </summary>
+            <param name="path"></param>
+            <returns>Returns true if the given path is a valid git repository, false otherwise.</returns>
+        </member>
+        <member name="M:GitSharp.Repository.IsValid(System.String,System.Boolean)">
+            <summary>
+            Checks if the directory given by the path is a valid git repository.
+            </summary>
+            <param name="path"></param>
+            <param name="bare"></param>
+            <returns>Returns true if the given path is a valid git repository, false otherwise.</returns>
+        </member>
+        <member name="M:GitSharp.Repository.FindRepository(System.String)">
+            <summary>
+            Searches for a git repository starting at the given path.
+            
+            Starting at the given path, searches up the file hierarchy for the next .git directory.
+            </summary>
+            <param name="starting_directory">The path where the search should start or null to start at the current directory</param>
+            <returns>A path if a repository has been found or null otherwise</returns>
         </member>
         <member name="P:GitSharp.Repository.Directory">
             <summary>
