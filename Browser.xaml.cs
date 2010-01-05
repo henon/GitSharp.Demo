@@ -42,6 +42,7 @@ using System.Security;
 using System.Windows;
 using System.Windows.Documents;
 using System.Diagnostics;
+using System.Windows.Threading;
 
 
 namespace GitSharp.Demo
@@ -58,7 +59,7 @@ namespace GitSharp.Demo
             m_tree.SelectedItemChanged += (o, args) => SelectObject(m_tree.SelectedValue as AbstractObject);
             //m_config_tree.SelectedItemChanged += (o, args) => SelectConfiguration(m_config_tree.SelectedItem);
             m_history_graph.CommitClicked += SelectCommit;
-            LoadRepository(m_url_textbox.Text);
+            Loaded += (o, args) => Dispatcher.BeginInvoke(new Action(() => LoadRepository(m_url_textbox.Text)), DispatcherPriority.Normal, new object[0]);
         }
 
         Configuration configurationWindow = new Configuration();
@@ -71,64 +72,12 @@ namespace GitSharp.Demo
             LoadRepository(url);
         }
 
-        /// <summary>
-        /// Performs upward recursive lookup to return git directory. Honors the environment variable GIT_DIR.
-        /// </summary>
-        /// <returns></returns>
-        public static string FindGitDirectory(string directory) // TODO: move to gitsharp api
-        {
-            string git_dir = Environment.GetEnvironmentVariable("GIT_DIR");
-
-            if ((directory == null || !new FileInfo(directory).Exists) && git_dir != null)
-                return git_dir;
-            try
-            {
-                if (directory == null)
-                    directory = Directory.GetCurrentDirectory();
-
-                while (directory != null)
-                {
-                    var git = Path.Combine(directory, ".git");
-                    if (Directory.Exists(git))
-                        return git;
-
-                    //Get parent directory
-                    var parent_directory = Path.Combine(directory, "..");
-                    parent_directory = Path.GetFullPath(parent_directory);
-                    if (parent_directory == directory) // <-- we have reached a toplevel directory which doesn't contain a .git dir.
-                        return null;
-                    directory = parent_directory;
-                }
-            }
-            catch (ArgumentException) // --> invalid path form
-            {
-                return null;
-            }
-            catch (SecurityException) // --> access denied
-            {
-                return null;
-            }
-            catch (UnauthorizedAccessException) // --> access denied
-            {
-                return null;
-            }
-            catch (PathTooLongException)
-            {
-                return null;
-            }
-            catch (NotSupportedException) // --> hmm?
-            {
-                return null;
-            }
-            return directory;
-        }
-
         private void LoadRepository(string url)
         {
-            var git_url = FindGitDirectory(url);
-            if (git_url==null || !Repository.IsValid(git_url))
+            var git_url = Repository.FindRepository(url);
+            if (git_url == null || !Repository.IsValid(git_url))
             {
-                MessageBox.Show("Given path doesn't seem to point to a git repository: " + url);
+                MessageBox.Show("Given path doesn't seem to refer to a git repository: " + url);
                 return;
             }
             var repo = new Repository(git_url);
