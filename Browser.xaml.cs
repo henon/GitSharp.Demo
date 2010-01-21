@@ -59,7 +59,7 @@ namespace GitSharp.Demo
             m_tree.SelectedItemChanged += (o, args) => SelectObject(m_tree.SelectedValue as AbstractObject);
             //m_config_tree.SelectedItemChanged += (o, args) => SelectConfiguration(m_config_tree.SelectedItem);
             m_history_graph.CommitClicked += SelectCommit;
-            Loaded += (o, args) => Dispatcher.BeginInvoke(new Action(() => LoadRepository(m_url_textbox.Text)), DispatcherPriority.Normal, new object[0]);
+            Loaded += (o, args) => Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() => LoadRepository(m_url_textbox.Text)));
         }
 
         Configuration configurationWindow = new Configuration();
