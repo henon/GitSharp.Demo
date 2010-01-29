@@ -3,6 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitSharp.Demo", "GitSharp.Demo.csproj", "{4B53BA11-1ADE-44E7-AC0F-7748D5701C25}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B96C19CB-9C72-48A9-8FB9-27DBA6147BDE}"
+	ProjectSection(SolutionItems) = preProject
+		Indentation.txt = Indentation.txt
+		Indentation.vssettings = Indentation.vssettings
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

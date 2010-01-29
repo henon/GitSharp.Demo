@@ -73,23 +73,29 @@
         </DataTemplate>-->
     </Window.Resources>
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-
-            <Menu  DockPanel.Dock="Top">
+        <!--menu-->
+        <Menu  DockPanel.Dock="Top">
             <MenuItem Header="File" >
-                <MenuItem Header="Open repository..." Click="OnSelectRepository"/>
+                <MenuItem Header="Open repository ..." Click="OnSelectRepository"/>
                 <Separator />
-                <MenuItem Header="Close" Click="OnMenuClose" />
+                <MenuItem Header="Exit" Click="OnMenuClose" />
             </MenuItem>
             <MenuItem Header="Edit" >
                 <MenuItem Header="Repository configuration..." Click="OnOpenRepositoryConfiguration"/>
             </MenuItem>
         </Menu>
-            <Label Margin="20,0,5,0">Repository Path</Label>
+        <!--status bar-->
+        <DockPanel DockPanel.Dock="Bottom" LastChildFill="False" Background="LightGray">
+            <Label Margin="0,0,5,0" Content="Repository:">
+                <Label.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Select repository path" Click="OnSelectRepository"/>
+                    </ContextMenu>
+                </Label.ContextMenu>
+            </Label>
             <TextBox Name="m_url_textbox" MinWidth="100">.</TextBox>
             <Button Click="OnLoadRepository" Margin="5,0,0,0">Reload</Button>
-            <!--<Label Margin="10,0,0,0">Select a commit. Differences to the previous commit are highlited in red.</Label>-->
-        </StackPanel>
+        </DockPanel>
         <DockPanel >
             <!--commit history graph-->
             <DockPanel Width="400">
@@ -122,7 +128,7 @@
                         <Demo:CommitSummaryView x:Name="m_commit_view"/>
                     </DockPanel>
                     <Controls:DockPanelSplitter DockPanel.Dock="Top"  Height="4"/>
-                        <!--commits-->
+                    <!--commits-->
                     <DockPanel DockPanel.Dock="Top">
                         <Label DockPanel.Dock="Top"  Name="m_commit_title"  Style="{StaticResource HeaderLabelStyle}">Changes by this commit</Label>
                         <!--<TextBlock DockPanel.Dock="Top"  >(Select two  commits to compare them via right click menu)</TextBlock>-->
@@ -148,7 +154,7 @@
                         <Demo:CommitDiffView x:Name="m_commit_diff"/>
                     </DockPanel>
                     <!--<GridSplitter Width="2" Grid.Column="1" ResizeBehavior="PreviousAndNext"/>-->
-                    
+
                 </DockPanel>
                 <!--<GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" Height="6" Background="White"/>-->
                 <Controls:DockPanelSplitter DockPanel.Dock="Top"  Height="4"/>

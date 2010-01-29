@@ -50,6 +50,7 @@ namespace GitSharp.Demo
 
     public partial class Browser
     {
+    	public const string CURRENT_REPOSITORY = "repository";
         public Browser()
         {
             InitializeComponent();
@@ -59,7 +60,8 @@ namespace GitSharp.Demo
             m_tree.SelectedItemChanged += (o, args) => SelectObject(m_tree.SelectedValue as AbstractObject);
             //m_config_tree.SelectedItemChanged += (o, args) => SelectConfiguration(m_config_tree.SelectedItem);
             m_history_graph.CommitClicked += SelectCommit;
-            Loaded += (o, args) => Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() => LoadRepository(m_url_textbox.Text)));
+				m_url_textbox.Text = UserSettings.GetString(CURRENT_REPOSITORY);
+				Loaded += (o, args) => Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() => LoadRepository(m_url_textbox.Text)));
         }
 
         Configuration configurationWindow = new Configuration();
@@ -82,6 +84,7 @@ namespace GitSharp.Demo
             }
             var repo = new Repository(git_url);
             m_url_textbox.Text = git_url;
+				UserSettings.SetValue(CURRENT_REPOSITORY, git_url);
             var head = repo.Head.Target as Commit;
             Debug.Assert(head != null);
             m_repository = repo;
@@ -166,6 +169,7 @@ namespace GitSharp.Demo
         private void OnSelectRepository(object sender, RoutedEventArgs e)
         {
             var dlg = new System.Windows.Forms.FolderBrowserDialog();
+        	   dlg.SelectedPath = Path.GetDirectoryName(UserSettings.GetString(CURRENT_REPOSITORY));
             //dlg.CheckPathExists = true;
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
