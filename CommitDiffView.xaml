@@ -65,7 +65,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Path" DisplayMemberBinding="{Binding Path=Path}" Width="200"/>
+                        <GridViewColumn Header="Path" DisplayMemberBinding="{Binding Path=Path}" Width="400"/>
                         <!--<GridViewColumn Header="Hash" DisplayMemberBinding="{Binding Path=ChangedObject.ShortHash}" />-->
                     </GridView.Columns>
                 </GridView>
