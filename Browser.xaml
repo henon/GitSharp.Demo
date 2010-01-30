@@ -100,7 +100,32 @@
             <!--commit history graph-->
             <DockPanel Width="400">
                 <Label DockPanel.Dock="Top" Style="{StaticResource HeaderLabelStyle}">Revision History</Label>
-                <HistoryGraph:HistoryGraphView x:Name="m_history_graph" DockPanel.Dock="Left"/>
+                <HistoryGraph:HistoryGraphView x:Name="m_history_graph" DockPanel.Dock="Top" Height="300"/>
+                <Controls:DockPanelSplitter DockPanel.Dock="Top"  Height="4"/>
+
+                <!--lower half-->
+
+                <Grid Grid.Row="2" DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <!--tree-->
+                    <DockPanel  Grid.Column="0">
+                        <Label DockPanel.Dock="Top"  Name="m_tree_title" Style="{StaticResource HeaderLabelStyle}">Source Tree (select to show content)</Label>
+                        <TreeView Name="m_tree"/>
+                    </DockPanel>
+
+                    <GridSplitter ResizeBehavior="PreviousAndNext" Width="2" Grid.Column="1"/>
+                    <!--object-->
+                    <DockPanel  Grid.Column="2">
+                        <Label DockPanel.Dock="Top"  Name="m_object_title" Style="{StaticResource HeaderLabelStyle}">Blob contents of selected tree node</Label>
+                        <RichTextBox Name="m_object" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+                    </DockPanel>
+
+                </Grid>
+
             </DockPanel>
             <Controls:DockPanelSplitter DockPanel.Dock="Left" Width="4" BorderThickness="1"/>
             <!--commit browser-->
@@ -130,57 +155,16 @@
                     <Controls:DockPanelSplitter DockPanel.Dock="Top"  Height="4"/>
                     <!--commits-->
                     <DockPanel DockPanel.Dock="Top">
-                        <Label DockPanel.Dock="Top"  Name="m_commit_title"  Style="{StaticResource HeaderLabelStyle}">Changes by this commit</Label>
-                        <!--<TextBlock DockPanel.Dock="Top"  >(Select two  commits to compare them via right click menu)</TextBlock>-->
-                        <!--<ListView Name="m_commits" DockPanel.Dock="Top">
-                                <ListView.View>
-                                    <GridView>
-                                        <GridView.Columns>
-                                            <GridViewColumn Header="Hash" DisplayMemberBinding="{Binding Path=ShortHash}" />
-                                            <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Path=Message}"/>
-                                            <GridViewColumn Header="Committer" DisplayMemberBinding="{Binding Path=Committer.Name}"/>
-                                            <GridViewColumn Header="CommitedDate" DisplayMemberBinding="{Binding Path=CommitDate}"/>
-                                            <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Path=Author.Name}"/>
-                                            <GridViewColumn Header="AuthoredDate" DisplayMemberBinding="{Binding Path=AuthorDate}"/>
-                                        </GridView.Columns>
-                                    </GridView>
-                                </ListView.View>
-                                <ListView.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="Diff selected commits" Name="m_diff_selected_commits" Click="OnDiffSelectedCommits"/>
-                                    </ContextMenu>
-                                </ListView.ContextMenu>
-                            </ListView>-->
-                        <Demo:CommitDiffView x:Name="m_commit_diff"/>
+                        <Label DockPanel.Dock="Top"  Name="m_commit_title"  Style="{StaticResource HeaderLabelStyle}">Changes by this commit (select a modification to view the diff)</Label>
+                        <Demo:CommitDiffView x:Name="m_commit_diff" DockPanel.Dock="Top"  />
+                        <Controls:DockPanelSplitter DockPanel.Dock="Top"  Height="4"/>
+                        <Label DockPanel.Dock="Top"   Style="{StaticResource HeaderLabelStyle}">Differences</Label>
+                        <Demo:TextDiffView x:Name="m_text_diff" DockPanel.Dock="Top"  />
                     </DockPanel>
                     <!--<GridSplitter Width="2" Grid.Column="1" ResizeBehavior="PreviousAndNext"/>-->
 
                 </DockPanel>
                 <!--<GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" Height="6" Background="White"/>-->
-                <Controls:DockPanelSplitter DockPanel.Dock="Top"  Height="4"/>
-
-                <!--lower half-->
-
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="2"/>
-                        <ColumnDefinition Width="2*"/>
-                    </Grid.ColumnDefinitions>
-                    <!--tree-->
-                    <DockPanel  Grid.Column="0">
-                        <Label DockPanel.Dock="Top"  Name="m_tree_title" Style="{StaticResource HeaderLabelStyle}">Source Tree</Label>
-                        <TreeView Name="m_tree"/>
-                    </DockPanel>
-
-                    <GridSplitter ResizeBehavior="PreviousAndNext" Width="2" Grid.Column="1"/>
-                    <!--object-->
-                    <DockPanel  Grid.Column="2">
-                        <Label DockPanel.Dock="Top"  Name="m_object_title" Style="{StaticResource HeaderLabelStyle}">Selected Object</Label>
-                        <RichTextBox Name="m_object" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
-                    </DockPanel>
-
-                </Grid>
             </DockPanel>
 
         </DockPanel>

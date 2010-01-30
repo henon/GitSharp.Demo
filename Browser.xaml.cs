@@ -48,199 +48,201 @@ using System.Windows.Threading;
 namespace GitSharp.Demo
 {
 
-    public partial class Browser
-    {
-    	public const string CURRENT_REPOSITORY = "repository";
-        public Browser()
-        {
-            InitializeComponent();
-            //m_commits.SelectionChanged += (o, args) => SelectCommit(m_commits.SelectedItem as Commit);
-            //m_branches.SelectionChanged += (o, args) => SelectBranch(m_branches.SelectedItem as Branch);
-            //m_refs.SelectionChanged += (o, args) => SelectRef(m_refs.SelectedItem as Ref);
-            m_tree.SelectedItemChanged += (o, args) => SelectObject(m_tree.SelectedValue as AbstractObject);
-            //m_config_tree.SelectedItemChanged += (o, args) => SelectConfiguration(m_config_tree.SelectedItem);
-            m_history_graph.CommitClicked += SelectCommit;
-				m_url_textbox.Text = UserSettings.GetString(CURRENT_REPOSITORY);
-				Loaded += (o, args) => Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() => LoadRepository(m_url_textbox.Text)));
-        }
+	public partial class Browser
+	{
+		public const string CURRENT_REPOSITORY = "repository";
+		public Browser()
+		{
+			InitializeComponent();
+			//m_commits.SelectionChanged += (o, args) => SelectCommit(m_commits.SelectedItem as Commit);
+			//m_branches.SelectionChanged += (o, args) => SelectBranch(m_branches.SelectedItem as Branch);
+			//m_refs.SelectionChanged += (o, args) => SelectRef(m_refs.SelectedItem as Ref);
+			m_tree.SelectedItemChanged += (o, args) => SelectObject(m_tree.SelectedValue as AbstractObject);
+			m_commit_diff.SelectionChanged += change => m_text_diff.Show(change);
+			//m_config_tree.SelectedItemChanged += (o, args) => SelectConfiguration(m_config_tree.SelectedItem);
+			m_history_graph.CommitClicked += SelectCommit;
+			m_url_textbox.Text = UserSettings.GetString(CURRENT_REPOSITORY);
+			Loaded += (o, args) => Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() => LoadRepository(m_url_textbox.Text)));
+		}
 
-        Configuration configurationWindow = new Configuration();
-        Repository m_repository;
+		Configuration configurationWindow = new Configuration();
+		Repository m_repository;
 
-        // load
-        private void OnLoadRepository(object sender, RoutedEventArgs e)
-        {
-            var url = m_url_textbox.Text;
-            LoadRepository(url);
-        }
+		// load
+		private void OnLoadRepository(object sender, RoutedEventArgs e)
+		{
+			var url = m_url_textbox.Text;
+			LoadRepository(url);
+		}
 
-        private void LoadRepository(string url)
-        {
-            var git_url = Repository.FindRepository(url);
-            if (git_url == null || !Repository.IsValid(git_url))
-            {
-                MessageBox.Show("Given path doesn't seem to refer to a git repository: " + url);
-                return;
-            }
-            var repo = new Repository(git_url);
-            m_url_textbox.Text = git_url;
-				UserSettings.SetValue(CURRENT_REPOSITORY, git_url);
-            var head = repo.Head.Target as Commit;
-            Debug.Assert(head != null);
-            m_repository = repo;
-            //var tags = repo.getTags().Values.Select(@ref => repo.MapTag(@ref.Name, @ref.ObjectId));
-            //var branches = repo.Branches.Values.Select(@ref => repo.MapCommit(@ref.ObjectId));
-            //m_refs.ItemsSource = repo.Refs.Values;
-            SelectCommit(head);
-            m_history_graph.Update(repo);
-            //ReloadConfiguration();
-            configurationWindow.Init(m_repository);
-        }
+		private void LoadRepository(string url)
+		{
+			var git_url = Repository.FindRepository(url);
+			if (git_url == null || !Repository.IsValid(git_url))
+			{
+				MessageBox.Show("Given path doesn't seem to refer to a git repository: " + url);
+				return;
+			}
+			var repo = new Repository(git_url);
+			m_url_textbox.Text = git_url;
+			UserSettings.SetValue(CURRENT_REPOSITORY, git_url);
+			var head = repo.Head.Target as Commit;
+			Debug.Assert(head != null);
+			m_repository = repo;
+			//var tags = repo.getTags().Values.Select(@ref => repo.MapTag(@ref.Name, @ref.ObjectId));
+			//var branches = repo.Branches.Values.Select(@ref => repo.MapCommit(@ref.ObjectId));
+			//m_refs.ItemsSource = repo.Refs.Values;
+			SelectCommit(head);
+			m_history_graph.Update(repo);
+			//ReloadConfiguration();
+			configurationWindow.Init(m_repository);
+		}
 
-        private void SelectObject(AbstractObject node)
-        {
-            if (node.IsBlob)
-            {
-                var blob = node as Leaf;
-                var text = blob.Data;
-                m_object.Document.Blocks.Clear();
-                var p = new Paragraph();
-                p.Inlines.Add(text);
-                m_object.Document.Blocks.Add(p);
-                m_object_title.Content = "Content of " + blob.Path;
-            }
-            else
-            {
-                m_object.Document.Blocks.Clear();
-            }
-        }
+		private void SelectObject(AbstractObject node)
+		{
+			if (node.IsBlob)
+			{
+				var blob = node as Leaf;
+				var text = blob.Data;
+				m_object.Document.Blocks.Clear();
+				var p = new Paragraph();
+				p.Inlines.Add(text);
+				m_object.Document.Blocks.Add(p);
+				m_object_title.Content = "Content of " + blob.Path;
+			}
+			else
+			{
+				m_object.Document.Blocks.Clear();
+			}
+		}
 
-        private void SelectBranch(object branch)
-        {
-            if (branch == null)
-                return;
-            //DisplayCommit(branch.Commit, "Branch "+branch.Name);
-        }
+		private void SelectBranch(object branch)
+		{
+			if (branch == null)
+				return;
+			//DisplayCommit(branch.Commit, "Branch "+branch.Name);
+		}
 
-        private void SelectRef(Ref r)
-        {
-            if (r == null)
-                return;
-            var obj = r.Target;
-            if (obj.IsCommit)
-            {
-                DisplayCommit(obj as Commit, "Commit history of " + r.Name);
-                return;
-            }
-            else if (obj.IsTag)
-            {
-                var tag = obj as Tag;
-                if (tag.Target == tag) // it sometimes happens to have self referencing tags
-                {
-                    return;
-                }
-                SelectTag(tag);
-                return;
-            }
-            else if (obj.IsTree)
-            {
-                // hmm, display somehow
-            }
-            else if (obj.IsBlob)
-            {
-                // hmm, display somehow
-            }
-            else
-            {
-                Debug.Fail("don't know how to display this object: " + obj.ToString());
-            }
-        }
+		private void SelectRef(Ref r)
+		{
+			if (r == null)
+				return;
+			var obj = r.Target;
+			if (obj.IsCommit)
+			{
+				DisplayCommit(obj as Commit, "Commit history of " + r.Name);
+				return;
+			}
+			else if (obj.IsTag)
+			{
+				var tag = obj as Tag;
+				if (tag.Target == tag) // it sometimes happens to have self referencing tags
+				{
+					return;
+				}
+				SelectTag(tag);
+				return;
+			}
+			else if (obj.IsTree)
+			{
+				// hmm, display somehow
+			}
+			else if (obj.IsBlob)
+			{
+				// hmm, display somehow
+			}
+			else
+			{
+				Debug.Fail("don't know how to display this object: " + obj.ToString());
+			}
+		}
 
-        private void SelectTag(Tag tag)
-        {
-            if (tag == null)
-                return;
-            if (tag.Target.IsCommit)
-                DisplayCommit(tag.Target as Commit, "Commit history of Tag " + tag.Name);
-            else
-                SelectObject(tag.Target);
-        }
+		private void SelectTag(Tag tag)
+		{
+			if (tag == null)
+				return;
+			if (tag.Target.IsCommit)
+				DisplayCommit(tag.Target as Commit, "Commit history of Tag " + tag.Name);
+			else
+				SelectObject(tag.Target);
+		}
 
-        private void OnSelectRepository(object sender, RoutedEventArgs e)
-        {
-            var dlg = new System.Windows.Forms.FolderBrowserDialog();
-        	   dlg.SelectedPath = Path.GetDirectoryName(UserSettings.GetString(CURRENT_REPOSITORY));
-            //dlg.CheckPathExists = true;
-            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                m_url_textbox.Text = dlg.SelectedPath;
-                LoadRepository(m_url_textbox.Text);
-            }
-        }
+		private void OnSelectRepository(object sender, RoutedEventArgs e)
+		{
+			var dlg = new System.Windows.Forms.FolderBrowserDialog();
+			dlg.SelectedPath = Path.GetDirectoryName(UserSettings.GetString(CURRENT_REPOSITORY));
+			//dlg.CheckPathExists = true;
+			if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				m_url_textbox.Text = dlg.SelectedPath;
+				LoadRepository(m_url_textbox.Text);
+			}
+		}
 
-        //private void SelectConfiguration(object obj)
-        //{
-        //    if (obj is Entry)
-        //    {
-        //        var entry = obj as dotGit.Config.Entry;
-        //        m_config_name.Content = entry.FullName;
-        //        if (entry.Value != null)
-        //            m_config_value.Text = entry.Value;
-        //    }
-        //}
+		//private void SelectConfiguration(object obj)
+		//{
+		//    if (obj is Entry)
+		//    {
+		//        var entry = obj as dotGit.Config.Entry;
+		//        m_config_name.Content = entry.FullName;
+		//        if (entry.Value != null)
+		//            m_config_value.Text = entry.Value;
+		//    }
+		//}
 
-        private void DisplayCommit(Commit commit, string info)
-        {
-            if (commit == null)
-                return;
-            //var list = commit.Ancestors.ToList();
-            //list.Insert(0, commit);
-            //m_commits.ItemsSource = list;
-            //m_commits.SelectedIndex = 0;
-        }
+		private void DisplayCommit(Commit commit, string info)
+		{
+			if (commit == null)
+				return;
+			//var list = commit.Ancestors.ToList();
+			//list.Insert(0, commit);
+			//m_commits.ItemsSource = list;
+			//m_commits.SelectedIndex = 0;
+		}
 
-        private void SelectCommit(Commit commit)
-        {
-            if (commit == null || commit.Tree == null)
-                return;
-            m_commit_view.Commit = commit;
-            m_tree.ItemsSource = commit.Tree.Children;
-            m_tree_title.Content = "Repository tree of Commit " + commit.ShortHash;
-            m_commit_diff.Init(commit.Parent, commit);
-            //m_commit_title.Text = "Commit history for " + info;
-            //(m_tree.ItemContainerGenerator.ContainerFromIndex(0) as TreeViewItem).IsExpanded = true;
-        }
-
-
-
-        private void OnDiffSelectedCommits(object sender, RoutedEventArgs e)
-        {
-            //var selection = m_commits.SelectedItems;
-            //if (selection.Count < 2)
-            //    return;
-            //var first_two=selection.Cast<Commit>().Take(2).ToArray();
-            //var commit_diff = new CommitDiffView();
-            //commit_diff.Init(first_two[0], first_two[1]);
-            //commit_diff.ShowDialog();
-        }
+		private void SelectCommit(Commit commit)
+		{
+			if (commit == null || commit.Tree == null)
+				return;
+			m_commit_view.Commit = commit;
+			m_tree.ItemsSource = commit.Tree.Children;
+			m_tree_title.Content = "Repository tree of Commit " + commit.ShortHash;
+			m_commit_diff.Init(commit.Parent, commit);
+			//m_text_diff.Clear();
+			//m_commit_title.Text = "Commit history for " + info;
+			//(m_tree.ItemContainerGenerator.ContainerFromIndex(0) as TreeViewItem).IsExpanded = true;
+		}
 
 
 
-        private void OnMenuClose(object sender, RoutedEventArgs e)
-        {
-            configurationWindow.Close();
-            this.Close();
-        }
+		private void OnDiffSelectedCommits(object sender, RoutedEventArgs e)
+		{
+			//var selection = m_commits.SelectedItems;
+			//if (selection.Count < 2)
+			//    return;
+			//var first_two=selection.Cast<Commit>().Take(2).ToArray();
+			//var commit_diff = new CommitDiffView();
+			//commit_diff.Init(first_two[0], first_two[1]);
+			//commit_diff.ShowDialog();
+		}
 
 
-        private void OnOpenRepositoryConfiguration(object sender, RoutedEventArgs e)
-        {
-            configurationWindow.ShowDialog();
-        }
 
-        private void Browser_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            configurationWindow.Close();
-        }
-    }
+		private void OnMenuClose(object sender, RoutedEventArgs e)
+		{
+			configurationWindow.Close();
+			this.Close();
+		}
+
+
+		private void OnOpenRepositoryConfiguration(object sender, RoutedEventArgs e)
+		{
+			configurationWindow.ShowDialog();
+		}
+
+		private void Browser_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			configurationWindow.Close();
+		}
+	}
 }
