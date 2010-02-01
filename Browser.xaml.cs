@@ -65,7 +65,7 @@ namespace GitSharp.Demo
 			Loaded += (o, args) => Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() => LoadRepository(m_url_textbox.Text)));
 		}
 
-		Configuration configurationWindow = new Configuration();
+		
 		Repository m_repository;
 
 		// load
@@ -93,9 +93,7 @@ namespace GitSharp.Demo
 			//var branches = repo.Branches.Values.Select(@ref => repo.MapCommit(@ref.ObjectId));
 			//m_refs.ItemsSource = repo.Refs.Values;
 			SelectCommit(head);
-			m_history_graph.Update(repo);
-			//ReloadConfiguration();
-			configurationWindow.Init(m_repository);
+			m_history_graph.Update(repo);			
 		}
 
 		private void SelectObject(AbstractObject node)
@@ -230,19 +228,17 @@ namespace GitSharp.Demo
 
 		private void OnMenuClose(object sender, RoutedEventArgs e)
 		{
-			configurationWindow.Close();
 			this.Close();
 		}
 
 
 		private void OnOpenRepositoryConfiguration(object sender, RoutedEventArgs e)
 		{
+            Configuration configurationWindow = new Configuration();
+            configurationWindow.Init(m_repository);
 			configurationWindow.ShowDialog();
 		}
 
-		private void Browser_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			configurationWindow.Close();
-		}
+		
 	}
 }

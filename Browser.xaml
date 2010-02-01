@@ -43,7 +43,7 @@
     xmlns:HistoryGraph="clr-namespace:GitSharp.Demo.HistoryGraph"
     xmlns:Demo="clr-namespace:GitSharp.Demo"
     xmlns:Controls="clr-namespace:GitSharp.Demo.Controls"
-    Title="GitSharp.Demo - Repository Browser" MinHeight="300" MinWidth="640" Width="800" Height="600" Closing="Browser_Closing">
+    Title="GitSharp.Demo - Repository Browser" MinHeight="300" MinWidth="640" Width="800" Height="600">
 
     <Window.Resources>
         <!--repository tree templates-->
