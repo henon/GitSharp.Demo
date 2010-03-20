@@ -322,16 +322,19 @@
         </member>
         <member name="M:GitSharp.Commit.Checkout">
             <summary>
-            Checkout this commit into the repositorie's working directory. Does not reset HEAD.
+            Checkout this commit into the working directory. Does not change HEAD.
+            <para/>
+            <seealso cref="M:GitSharp.Branch.Checkout"/> and <seealso cref="M:GitSharp.Index.Checkout"/>.
             </summary>
         </member>
-        <member name="M:GitSharp.Commit.Checkout(System.String)">
+        <member name="M:GitSharp.Commit.Checkout(System.String[])">
             <summary>
-            Checkout this commit into the given directory. Does not reset HEAD!
-            
-            Note: do not confuse this with Branch.Checkout. Commit.Checkout( path)  is for exporting the tree of a commit into a directory.
+            Check out the given paths into the working directory. Files in the working directory will be overwritten.
+            <para/>
+            See also <seealso cref="M:GitSharp.Index.Checkout(System.String[])"/> to check out paths from the index.
             </summary>
-            <param name="working_directory">The directory to put the sources into</param>
+            <param name="paths">Relative paths of the files to check out.</param>
+            Throws a lot of IO and Security related exceptions.
         </member>
         <member name="M:GitSharp.Commit.CompareCommits(GitSharp.Commit,GitSharp.Commit)">
             <summary>
@@ -2520,7 +2523,7 @@
         </member>
         <member name="M:GitSharp.Branch.Checkout">
             <summary>
-            Switch to this branch and check it out into the working directory.
+            Check out this branch into the working directory and have HEAD point to it.
             </summary>
         </member>
         <member name="M:GitSharp.Branch.Rename(System.String)">
@@ -2530,34 +2533,27 @@
             Not yet implemented!
             </summary>
         </member>
-        <member name="M:GitSharp.Branch.Reset">
-            <summary>
-            Reset this Branch to the current Commit without touching working directory or Index (ResetBehavior.Mixed).
-            </summary>
-        </member>
-        <member name="M:GitSharp.Branch.Reset(System.String)">
-            <summary>
-            Reset this Branch to the named Commit without touching working directory or Index (ResetBehavior.Mixed).
-            </summary>
-        </member>
-        <member name="M:GitSharp.Branch.Reset(GitSharp.Commit)">
-            <summary>
-            Reset this Branch to the given Commit without touching working directory or Index (ResetBehavior.Mixed).
-            </summary>
-        </member>
         <member name="M:GitSharp.Branch.Reset(GitSharp.ResetBehavior)">
             <summary>
-            Reset this Branch to the current Commit using the given ResetBehavior.
+            Reset this Branch to the current Commit using the given ResetBehavior. <see cref="M:GitSharp.Branch.Reset(GitSharp.Commit,GitSharp.ResetBehavior)"/> for explanation of the reset behavior.
             </summary>
         </member>
         <member name="M:GitSharp.Branch.Reset(System.String,GitSharp.ResetBehavior)">
             <summary>
-            Reset this Branch to the named Commit using the given ResetBehavior.
+            Reset this Branch to the named Commit using the given ResetBehavior. <see cref="M:GitSharp.Branch.Reset(GitSharp.Commit,GitSharp.ResetBehavior)"/> for explanation of the reset behavior.
             </summary>
         </member>
         <member name="M:GitSharp.Branch.Reset(GitSharp.Commit,GitSharp.ResetBehavior)">
             <summary>
             Reset this Branch to the given Commit using the given ResetBehavior.
+            <para/>
+            Reset behavior:
+            <u>
+            <il>Mixed - Resets the index but not the working tree (i.e., the changed files are preserved but not marked for commit) and reports what has not been updated. This is the default action.</il>
+            <il>Soft - Does not touch the index file nor the working tree at all, but requires them to be in a good order. This leaves all your changed files "Changes to be committed", as git status would put it.</il>
+            <il>Hard - Matches the working tree and index to that of the tree being switched to. Any changes to tracked files in the working tree since the commit are lost.</il>
+            <il>Merge - (NOT IMPLEMENTED) Resets the index to match the tree recorded by the named commit, and updates the files that are different between the named commit and the current commit in the working tree.</il>
+            </u>
             </summary>
         </member>
         <member name="M:GitSharp.Branch.Create(GitSharp.Repository,System.String)">
@@ -2576,12 +2572,6 @@
             <param name="name">The name of the branch to create (i.e. "master", not "refs/heads/master")</param>
             <param name="commit">The commit to base the branch on.</param>
             <returns>returns the newly created Branch object</returns>
-        </member>
-        <member name="M:GitSharp.Branch.SwitchTo(GitSharp.Branch)">
-            <summary>
-            Switch to the given branch
-            </summary>
-            <param name="branch"></param>
         </member>
         <member name="P:GitSharp.Branch.Fullname">
             <summary>
@@ -5163,27 +5153,27 @@
             
             </summary>
         </member>
-        <member name="T:GitSharp.CloneCommand">
+        <member name="T:GitSharp.Commands.CloneCommand">
             <summary>
             Represents git's clone command line interface command.
             </summary>
         </member>
-        <member name="M:GitSharp.CloneCommand.Execute">
+        <member name="M:GitSharp.Commands.CloneCommand.Execute">
             <summary>
             Do it.
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.ActualDirectory">
+        <member name="P:GitSharp.Commands.CloneCommand.ActualDirectory">
             <summary>
             Get the directory where the Init command will initialize the repository. if GitDirectory is null ActualDirectory is used to initialize the repository.
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.Source">
+        <member name="P:GitSharp.Commands.CloneCommand.Source">
             <summary>
             The (possibly remote) repository to clone from.
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.Local">
+        <member name="P:GitSharp.Commands.CloneCommand.Local">
             <summary>
             Not implemented
             
@@ -5194,14 +5184,14 @@
             the usual "git aware" transport mechanism, --no-hardlinks can be used. 
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.NoHardLinks">
+        <member name="P:GitSharp.Commands.CloneCommand.NoHardLinks">
             <summary>
             Not implemented
             
             Optimize the cloning process from a repository on a local filesystem by copying files under .git/objects  directory. 
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.Shared">
+        <member name="P:GitSharp.Commands.CloneCommand.Shared">
             <summary>
             Not implemented
             
@@ -5214,7 +5204,7 @@
             (See git-gc(1).) If these objects are removed and were referenced by the cloned repository, then the cloned repository will become corrupt.
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.ReferenceRepository">
+        <member name="P:GitSharp.Commands.CloneCommand.ReferenceRepository">
             <summary>
             Not implemented
             
@@ -5224,53 +5214,53 @@
             NOTE: see NOTE to --shared option.
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.Quiet">
+        <member name="P:GitSharp.Commands.CloneCommand.Quiet">
             <summary>
             Operate quietly. This flag is also passed to the `rsync' command when given.
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.Verbose">
+        <member name="P:GitSharp.Commands.CloneCommand.Verbose">
             <summary>
             Display the progressbar, even in case the standard output is not a terminal. 
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.NoCheckout">
+        <member name="P:GitSharp.Commands.CloneCommand.NoCheckout">
             <summary>
             No checkout of HEAD is performed after the clone is complete. 
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.Bare">
+        <member name="P:GitSharp.Commands.CloneCommand.Bare">
             <summary>
             Make a bare GIT repository. That is, instead of creating "directory" and placing the administrative files in "directory"/.git, make the "directory"  itself the $GIT_DIR. 
             This obviously implies the -n  because there is nowhere to check out the working tree. Also the branch heads at the remote are copied directly to corresponding local 
             branch heads, without mapping them to refs/remotes/origin/. When this option is used, neither remote-tracking branches nor the related configuration variables are created. 
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.Mirror">
+        <member name="P:GitSharp.Commands.CloneCommand.Mirror">
             <summary>
             Set up a mirror of the remote repository. This implies --bare. 
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.OriginName">
+        <member name="P:GitSharp.Commands.CloneCommand.OriginName">
             <summary>
             Instead of using the remote name origin to keep track of the upstream repository, use "name". 
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.UploadPack">
+        <member name="P:GitSharp.Commands.CloneCommand.UploadPack">
             <summary>
             Not implemented.
             
             When given, and the repository to clone from is accessed via ssh, this specifies a non-default path for the command run on the other end. 
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.TemplateDirectory">
+        <member name="P:GitSharp.Commands.CloneCommand.TemplateDirectory">
             <summary>
             Not implemented.
             
             Specify the directory from which templates will be used; if unset the templates are taken from the installation defined default, typically /usr/share/git-core/templates. 
             </summary>
         </member>
-        <member name="P:GitSharp.CloneCommand.Depth">
+        <member name="P:GitSharp.Commands.CloneCommand.Depth">
             <summary>
             Not implemented.
             
@@ -5843,21 +5833,21 @@
             </summary>
             <param name="path">Path to the local git repository.</param>
         </member>
-        <member name="M:GitSharp.Repository.CheckoutBranch(System.String)">
+        <member name="M:GitSharp.Repository.SwitchToBranch(System.String)">
             <summary>
-            Check out the branch with the given name
+            Check out the branch with the given name into the working directory and make it the current branch.
             </summary>
             <param name="name"></param>
         </member>
-        <member name="M:GitSharp.Repository.CheckoutBranch(GitSharp.Branch)">
+        <member name="M:GitSharp.Repository.SwitchToBranch(GitSharp.Branch)">
             <summary>
-            Check out the given branch
+            Check out the given branch into the working directory and make it the current branch.
             </summary>
             <param name="branch"></param>
         </member>
         <member name="M:GitSharp.Repository.Commit(System.String)">
             <summary>
-            Commit staged changes and update HEAD. The default git author is used.
+            Commit staged changes and update HEAD. The default git author from the config is used.
             </summary>
             <param name="message">The commit message</param>
             <returns>Returns the newly created commit</returns>
@@ -5916,6 +5906,41 @@
             <param name="starting_directory">The path where the search should start or null to start at the current directory</param>
             <returns>A path if a repository has been found or null otherwise</returns>
         </member>
+        <member name="M:GitSharp.Repository.Get``1(System.String)">
+            <summary>
+            Access a git object by name, id or path. Use the type parameter to tell what kind of object you like to get. Supported types are
+            <ul>
+              <il>Blob</il>
+              <il>Branch</il>
+              <il>Commit</il>
+              <il>Leaf</il>
+              <il>Tag</il>
+              <il>Tree</il>
+              <il>AbstractObject - use this if you are not sure about the type yourself. You will get back an object of the correct type (Blob, Commit, Tag or Tree).</il>
+            </ul>
+            <para />
+            Branches, Commits or Tags may be accessed by name or reference expression. Currently supported are combinations of these:
+            <ul>
+              <li>hash - a SHA-1 hash</li>
+              <li>refs/... - a ref name</li>
+              <li>ref^n - nth parent reference</li>
+              <li>ref~n - distance via parent reference</li>
+              <li>ref@{n} - nth version of ref</li>
+              <li>ref^{tree} - tree references by ref</li>
+              <li>ref^{commit} - commit references by ref</li>
+            </ul>
+            <para />
+            Not supported is
+            <ul>
+               <li>abbreviated SHA-1</li>
+              <li>timestamps in reflogs, ref@{full or relative timestamp}</li>
+            </ul>		
+            <para/>
+            Tree or Leaf (Blob) objects can be addressed by long hash or by their relative repository path
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
         <member name="P:GitSharp.Repository.Directory">
             <summary>
             Returns the path to the repository database (i.e. the .git directory).
@@ -5945,14 +5970,7 @@
         </member>
         <member name="P:GitSharp.Repository.Status">
             <summary>
-            Get the differences between the working directory and the index.
-            Returns a data structure containing the results (like "git status").
-            </summary>
-        </member>
-        <member name="P:GitSharp.Repository.PreferredEncoding">
-            <summary>
-            If data in a repository (i.e. filenames, commit messages, etc. ) is to be decoded with a special encoding
-            set this property. Default setting is UTF8
+            Get a report about the differences between the working directory, the index and the current commit.
             </summary>
         </member>
         <member name="T:GitSharp.Diff">
@@ -6001,6 +6019,13 @@
             An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
             </returns>
             <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:GitSharp.Diff.IsBinary(System.String)">
+            <summary>
+            Returns true if the given file seems to be a binary file. The heuristic used is similar to that of diff on unix: it looks for 0 bytes. Of course this classifies Unicode files as binaries too.
+            </summary>
+            <param name="path">path to the file to check (absolute or relative to the current directory)</param>
+            <returns>True if the file seems to be binary, false if it seems to be text and null if no decision can't be made</returns>
         </member>
         <member name="P:GitSharp.Diff.Sections">
             <summary>
@@ -7087,7 +7112,15 @@
             </summary>
             <param name="paths">Paths to add to the index</param>
         </member>
-        <member name="M:GitSharp.Index.Add(System.Byte[],System.Byte[])">
+        <member name="M:GitSharp.Index.AddContent(System.String,System.String)">
+            <summary>
+            Add a file to index (without relying on the working directory) by specifying the file's content as string. 
+            The added file doesn't need to exist in the working directory.
+            </summary>
+            <param name="path">Relative path in the working directory. Note: the path is encoded using PathEncoding</param>
+            <param name="content">The content as string. Note: the content is encoded using ContentEncoding</param>
+        </member>
+        <member name="M:GitSharp.Index.AddContent(System.Byte[],System.Byte[])">
             <summary>
             Add content to the index directly without the need for a file in the working directory.
             </summary>
@@ -7097,11 +7130,7 @@
         <member name="M:GitSharp.Index.Remove(System.String[])">
             <summary>
             Removes files or directories from the index which are no longer to be tracked. 
-            Does not delete files from the working directory. Use Delete to remove and delete files.
-            
-            Note: Remove requires the files and directories to be removed to be present in the working
-            directory in order to find out. TODO: make this not dependent of the working directory by
-            looking into the tree of the current commit.
+            Does not delete files from the working directory. Use <seealso cref="M:GitSharp.Index.Delete(System.String[])"/> to remove and delete files.
             </summary>
             <param name="paths"></param>
         </member>
@@ -7114,7 +7143,31 @@
         </member>
         <member name="M:GitSharp.Index.Stage(System.String[])">
             <summary>
-            Stages the given files. Untracked files are added.
+            Stages the given files. Untracked files are added. This is an alias for Add.
+            </summary>
+            <param name="paths"></param>
+        </member>
+        <member name="M:GitSharp.Index.StageContent(System.String,System.String)">
+            <summary>
+            This is an alias for AddContent.
+            </summary>
+        </member>
+        <member name="M:GitSharp.Index.Unstage(System.String[])">
+            <summary>
+            Unstage overwrites staged files in the index with their current version in HEAD. In case of newly added files they are removed from the index.
+            </summary>
+            <param name="paths">Relative paths to files you want to unstage.</param>
+        </member>
+        <member name="M:GitSharp.Index.Checkout">
+            <summary>
+            Check out the index into the working directory. Any modified files will be overwritten.
+            <para/>
+            <seealso cref="M:GitSharp.Branch.Checkout"/> to checkout from a commit.
+            </summary>
+        </member>
+        <member name="M:GitSharp.Index.Checkout(System.String[])">
+            <summary>
+            Check out given paths from the index overwriting files in the working directory. Modified files might be overwritten.
             </summary>
             <param name="paths"></param>
         </member>
@@ -7133,6 +7186,21 @@
             Returns true if the index has been changed, which means there are changes to be committed. This
             is not to be confused with the status of the working directory. If changes in the working directory have not been
             staged then IsChanged is false.
+            </summary>
+        </member>
+        <member name="P:GitSharp.Index.PathEncoding">
+            <summary>
+            The encoding to be used to convert file paths from string to byte arrays.
+            </summary>
+        </member>
+        <member name="P:GitSharp.Index.ContentEncoding">
+            <summary>
+            The encoding to be used to convert file contents from string to byte arrays.
+            </summary>
+        </member>
+        <member name="P:GitSharp.Index.Size">
+            <summary>
+            The number of files tracked by the repository 
             </summary>
         </member>
         <member name="P:GitSharp.Commands.LsRemoteCommand.Heads">
@@ -7750,6 +7818,18 @@
             <summary>
             Leaf entries representing this directory's files
             </summary>
+        </member>
+        <member name="P:GitSharp.Tree.Item(System.String)">
+            <summary>
+            Find a Blob or Tree by traversing the tree along the given path. You can access not only direct children
+            of the tree but any descendant of this tree.
+            <para/>
+            The path's directory seperators may be both forward or backslash, it is converted automatically to the internal representation.
+            <para/>
+            Throws IOException.
+            </summary>
+            <param name="path">Relative path to a file or directory in the git tree. For directories a trailing slash is allowed</param>
+            <returns>A tree or blob object representing the referenced object</returns>
         </member>
         <member name="T:GitSharp.Text">
             <summary>
@@ -10293,9 +10373,29 @@
             
             </summary>
         </member>
-        <member name="T:GitSharp.RepositoryStatus">
+        <member name="M:GitSharp.RepositoryStatus.Diff">
             <summary>
-            A summary of changes made to the working directory of a repository with respect to its index.
+            Run the diff operation. Until this is called, all lists will be empty
+            </summary>
+            <returns>true if anything is different between index, tree, and workdir</returns>
+        </member>
+        <member name="M:GitSharp.RepositoryStatus.OnVisitEntry(GitSharp.Core.TreeEntry,GitSharp.Core.TreeEntry,GitSharp.Core.GitIndex.Entry,System.IO.FileInfo)">
+            <summary>
+            
+            </summary>
+            <param name="treeEntry"></param>
+            <param name="wdirEntry">Note: wdirEntry is the non-ignored working directory entry.</param>
+            <param name="indexEntry"></param>
+            <param name="file">Note: gitignore patterns do not influence this parameter</param>
+        </member>
+        <member name="M:GitSharp.RepositoryStatus.Update">
+            <summary>
+            Recalculates the status
+            </summary>
+        </member>
+        <member name="P:GitSharp.RepositoryStatus.Options">
+            <summary>
+            
             </summary>
         </member>
         <member name="P:GitSharp.RepositoryStatus.Added">
@@ -10333,9 +10433,35 @@
             List of files with staged modifications that conflict.
             </summary>
         </member>
-        <member name="P:GitSharp.RepositoryStatus.IndexSize">
+        <member name="T:GitSharp.RepositoryStatusOptions">
             <summary>
-            Returns the number of files checked into the git repository
+            RepositoryStatus options allow customizing of the status checking routines. 
+            </summary>
+        </member>
+        <member name="P:GitSharp.RepositoryStatusOptions.ForceContentCheck">
+            <summary>
+            If filetime and index entry time are equal forces a full content check. This can be costly for large repositories.
+            </summary>
+        </member>
+        <member name="P:GitSharp.RepositoryStatusOptions.PerPathNotificationCallback">
+            <summary>
+            If you want to get instant per path status info while the algorithm traverses working directry, index and commit tree set this callback. Note,
+            that it is fired only if RepositoryStatus detects differences.
+            </summary>
+        </member>
+        <member name="T:GitSharp.PathStatus">
+            <summary>
+            Status information for a single path in the working directry or index. See RepositoryStatusOptions.PerPathNotification for more information.
+            </summary>
+        </member>
+        <member name="P:GitSharp.PathStatus.Path">
+            <summary>
+            Relative repository path.
+            </summary>
+        </member>
+        <member name="P:GitSharp.PathStatus.Name">
+            <summary>
+            Name of the file
             </summary>
         </member>
         <member name="T:GitSharp.Tag">
@@ -11201,10 +11327,7 @@
         </member>
         <member name="P:GitSharp.Commands.CheckoutCommand.Quiet">
             <summary>
-            Not implemented
-            
             Quiet, suppress feedback messages.
-            
             </summary>
         </member>
         <member name="P:GitSharp.Commands.CheckoutCommand.Force">
@@ -11238,7 +11361,7 @@
             
             </summary>
         </member>
-        <member name="P:GitSharp.Commands.CheckoutCommand.B">
+        <member name="P:GitSharp.Commands.CheckoutCommand.BranchCreate">
             <summary>
             Not implemented
             
@@ -11275,7 +11398,7 @@
             
             </summary>
         </member>
-        <member name="P:GitSharp.Commands.CheckoutCommand.L">
+        <member name="P:GitSharp.Commands.CheckoutCommand.RefLog">
             <summary>
             Not implemented
             

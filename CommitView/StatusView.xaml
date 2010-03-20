@@ -1,6 +1,6 @@
 ﻿<!--
  /*
- * Copyright (C) 2009, Henon<meinrad.recheis@gmail.com>
+ * Copyright (C) 2010, Henon<meinrad.recheis@gmail.com>
  *
  * All rights reserved.
  *
@@ -36,17 +36,18 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
   -->
- <Application x:Class="GitSharp.Demo.App"
+<UserControl x:Class="GitSharp.Demo.CommitView.StatusView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    StartupUri="MainFrame.xaml">
-    <Application.Resources>
-        <LinearGradientBrush x:Key="SilverGradientTopVertical" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#FFEEEEEE" Offset="0" />
-            <GradientStop Color="#FFCCCCCC" Offset="1" />
-        </LinearGradientBrush>
-        <Style x:Key="HeaderLabelStyle">
-            <Setter Property="Label.Background" Value="{StaticResource SilverGradientTopVertical}" ></Setter>
-        </Style>
-    </Application.Resources>
-</Application>
+    xmlns:Demo="clr-namespace:GitSharp.Demo"
+    xmlns:Controls="clr-namespace:GitSharp.Demo.Controls"
+    MinHeight="300" MinWidth="300">
+    <DockPanel>
+        <StackPanel Orientation ="Horizontal" DockPanel.Dock="Top">
+            <Button Click="OnCommitButtonClick">Commit staged changes ...</Button>
+        </StackPanel>
+        <Demo:StatusListView x:Name="m_status_list"/>
+        <Controls:DockPanelSplitter Width="4"/>
+        <Demo:TextDiffView x:Name="m_diff_view"/>
+    </DockPanel>
+</UserControl>

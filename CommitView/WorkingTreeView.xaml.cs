@@ -1,6 +1,5 @@
-﻿<!--
- /*
- * Copyright (C) 2009, Henon<meinrad.recheis@gmail.com>
+﻿/*
+ * Copyright (C) 2010, Henon <meinrad.recheis@gmail.com>
  *
  * All rights reserved.
  *
@@ -35,18 +34,66 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-  -->
- <Application x:Class="GitSharp.Demo.App"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    StartupUri="MainFrame.xaml">
-    <Application.Resources>
-        <LinearGradientBrush x:Key="SilverGradientTopVertical" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#FFEEEEEE" Offset="0" />
-            <GradientStop Color="#FFCCCCCC" Offset="1" />
-        </LinearGradientBrush>
-        <Style x:Key="HeaderLabelStyle">
-            <Setter Property="Label.Background" Value="{StaticResource SilverGradientTopVertical}" ></Setter>
-        </Style>
-    </Application.Resources>
-</Application>
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using GitSharp.Demo.CommitView;
+using GitSharp.Demo.Util;
+
+namespace GitSharp.Demo
+{
+	/// <summary>
+	/// Interaction logic for StatusView.xaml
+	/// </summary>
+	public partial class WorkingTreeView : UserControl
+	{
+		public WorkingTreeView()
+		{
+			InitializeComponent();
+			Height = double.NaN;
+			Width = double.NaN;
+		}
+
+		public static IValueConverter StatusToColorConverter
+		{
+			get
+			{
+				return new GenericConverter {ConvertFunc = ConvertStatusToColor};
+			}
+		}
+
+		private static object ConvertStatusToColor(object arg, Type t, object parameter, CultureInfo culture)
+		{
+			var status = arg as string;
+			switch (status)
+			{
+				case "Modified":
+					return Brushes.RoyalBlue;
+				case "Added":
+				case "Staged":
+					return Brushes.Chartreuse;
+				case "MergeConflict":
+					return Brushes.Red;
+				//case "Missing":
+				//case "Removed":
+
+				case "Untracked":
+					return Brushes.DarkGray;
+			}
+			return Brushes.Black;
+		}
+	}
+
+
+}

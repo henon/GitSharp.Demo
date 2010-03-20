@@ -41,7 +41,7 @@ using GitSharp.Core.RevPlot;
 
 namespace GitSharp.Demo.HistoryGraph
 {
-    public partial class HistoryGraphView
+    public partial class HistoryGraphView : IRepositoryView
     {
         public event Action<Commit> CommitClicked;
 

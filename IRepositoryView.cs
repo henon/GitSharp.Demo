@@ -1,6 +1,5 @@
-﻿<!--
- /*
- * Copyright (C) 2009, Henon<meinrad.recheis@gmail.com>
+﻿ /*
+ * Copyright (C) 2010, Henon<meinrad.recheis@gmail.com>
  *
  * All rights reserved.
  *
@@ -35,18 +34,15 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-  -->
- <Application x:Class="GitSharp.Demo.App"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    StartupUri="MainFrame.xaml">
-    <Application.Resources>
-        <LinearGradientBrush x:Key="SilverGradientTopVertical" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#FFEEEEEE" Offset="0" />
-            <GradientStop Color="#FFCCCCCC" Offset="1" />
-        </LinearGradientBrush>
-        <Style x:Key="HeaderLabelStyle">
-            <Setter Property="Label.Background" Value="{StaticResource SilverGradientTopVertical}" ></Setter>
-        </Style>
-    </Application.Resources>
-</Application>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace GitSharp.Demo
+{
+	public interface IRepositoryView
+	{
+		void Update(Repository repository);
+	}
+}

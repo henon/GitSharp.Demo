@@ -1,6 +1,5 @@
-﻿<!--
- /*
- * Copyright (C) 2009, Henon<meinrad.recheis@gmail.com>
+﻿/*
+ * Copyright (C) 2010, Henon <meinrad.recheis@gmail.com>
  *
  * All rights reserved.
  *
@@ -35,18 +34,63 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-  -->
- <Application x:Class="GitSharp.Demo.App"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    StartupUri="MainFrame.xaml">
-    <Application.Resources>
-        <LinearGradientBrush x:Key="SilverGradientTopVertical" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#FFEEEEEE" Offset="0" />
-            <GradientStop Color="#FFCCCCCC" Offset="1" />
-        </LinearGradientBrush>
-        <Style x:Key="HeaderLabelStyle">
-            <Setter Property="Label.Background" Value="{StaticResource SilverGradientTopVertical}" ></Setter>
-        </Style>
-    </Application.Resources>
-</Application>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace GitSharp.Demo.CommitView
+{
+	/// <summary>
+	/// Interaction logic for CommitDialog.xaml
+	/// </summary>
+	public partial class CommitDialog : Window
+	{
+		public CommitDialog()
+		{
+			InitializeComponent();
+			Width = double.NaN;
+			Height = double.NaN;
+		}
+
+		private Repository m_repository;
+
+		public Repository Repository
+		{
+			get { return m_repository; }
+			set
+			{
+				m_repository = value;
+			}
+		}
+
+		public void Init(IEnumerable<PathStatus> paths)
+		{
+			m_list.ItemsSource = paths;
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			if (m_message.Text.Trim().Length == 0)
+			{
+				MessageBox.Show("A commit message is required!");
+				return;
+			}
+			Repository.Commit(m_message.Text, new Author(Repository.Config["user.name"] ?? "anonymous", Repository.Config["user.email"] ?? ""));
+			Close();
+		}
+
+		private void Button_Click_1(object sender, RoutedEventArgs e)
+		{
+			Close();
+		}
+	}
+}

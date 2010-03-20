@@ -1,6 +1,6 @@
 ﻿<!--
  /*
- * Copyright (C) 2009, Henon<meinrad.recheis@gmail.com>
+ * Copyright (C) 2010, Henon<meinrad.recheis@gmail.com>
  *
  * All rights reserved.
  *
@@ -36,17 +36,41 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
   -->
- <Application x:Class="GitSharp.Demo.App"
+<Window x:Class="GitSharp.Demo.MainFrame"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    StartupUri="MainFrame.xaml">
-    <Application.Resources>
-        <LinearGradientBrush x:Key="SilverGradientTopVertical" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#FFEEEEEE" Offset="0" />
-            <GradientStop Color="#FFCCCCCC" Offset="1" />
-        </LinearGradientBrush>
-        <Style x:Key="HeaderLabelStyle">
-            <Setter Property="Label.Background" Value="{StaticResource SilverGradientTopVertical}" ></Setter>
-        </Style>
-    </Application.Resources>
-</Application>
+    xmlns:Demo="clr-namespace:GitSharp.Demo"
+    xmlns:CommitView="clr-namespace:GitSharp.Demo.CommitView"
+    Title="GitSharp Demo" MinHeight="300" MinWidth="300">
+    <DockPanel>
+        <!--menu-->
+        <Menu  DockPanel.Dock="Top">
+            <MenuItem Header="File" >
+                <MenuItem Header="Open repository ..." Click="OnSelectRepository"/>
+                <Separator />
+                <MenuItem Header="Exit" Click="OnMenuClose" />
+            </MenuItem>
+        </Menu>
+        <!--status bar-->
+        <DockPanel DockPanel.Dock="Bottom" LastChildFill="False" Background="LightGray">
+            <Label Margin="0,0,5,0" Content="Repository:">
+                <Label.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Select repository path" Click="OnSelectRepository"/>
+                    </ContextMenu>
+                </Label.ContextMenu>
+            </Label>
+            <TextBox Name="m_url_textbox" MinWidth="100">.</TextBox>
+            <Button Click="OnLoadRepository" Margin="5,0,0,0">Reload</Button>
+        </DockPanel>
+        
+        <TabControl Name="m_tab_control">
+            <TabItem Header="Browsing">
+                <Demo:BrowserView/>
+            </TabItem>
+            <TabItem Header="Committing" >
+                <CommitView:StatusView/>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>
