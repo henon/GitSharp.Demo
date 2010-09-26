@@ -3,11 +3,32 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:GitSharp.Demo.HistoryGraph"
     MinHeight="100" MinWidth="100" BorderBrush="DarkGray" BorderThickness="1">
+    <UserControl.Resources>
+        <!-- Set Selection Color to be consistent with colors used for drawing -->
+        <SolidColorBrush x:Key="SelectedBackgroundBrush">DarkCyan</SolidColorBrush>
+        <Style x:Key="ListItemStyle1" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Border Name="Border" Background="{TemplateBinding Background}" >
+                            <ContentPresenter HorizontalAlignment="Left" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource SelectedBackgroundBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
 
     <!-- Perhaps the listbox should be re-templated to have better selection appearance? -->
     <!-- Note: Horz Scrollbar is always visible to avoid strange behavior due to Virtualizing -->
     <ListBox x:Name="lstCommits" VirtualizingStackPanel.IsVirtualizing="True" 
-             Background="DarkGray" ScrollViewer.HorizontalScrollBarVisibility="Visible" SelectionChanged="lstCommits_SelectionChanged">
+             Background="DarkGray" ScrollViewer.HorizontalScrollBarVisibility="Visible" 
+             SelectionChanged="lstCommits_SelectionChanged" ItemContainerStyle="{StaticResource ListItemStyle1}">
         <ListBox.ItemTemplate>
             <DataTemplate>
                 <local:PlotCommitElement CurrentCommit="{Binding}" />

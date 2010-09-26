@@ -201,7 +201,7 @@ namespace GitSharp.Demo.HistoryGraph
 
         protected override Brush laneColor(PlotLane my_lane)
         {
-            return Brushes.DarkCyan;
+            return Brushes.Black;
         }
 
         protected override void drawLine(Brush color, int x1, int y1, int x2, int y2, int width)
@@ -216,7 +216,7 @@ namespace GitSharp.Demo.HistoryGraph
         {
             double Rx = w / 2;  // convert width/height to radius
             double Ry = h / 2;
-            _DC.DrawEllipse(Brushes.DarkCyan, null, new Point(x + Rx, y + Ry), Rx, Ry);
+            _DC.DrawEllipse(Brushes.Black, null, new Point(x + Rx, y + Ry), Rx, Ry);
         }
 
         protected override void drawBoundaryDot(int x, int y, int w, int h)
