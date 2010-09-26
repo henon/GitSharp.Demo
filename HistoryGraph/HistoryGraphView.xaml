@@ -1,8 +1,18 @@
 ﻿<UserControl x:Class="GitSharp.Demo.HistoryGraph.HistoryGraphView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:GitSharp.Demo.HistoryGraph"
     MinHeight="100" MinWidth="100" BorderBrush="DarkGray" BorderThickness="1">
-    <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto">
-        <Canvas VerticalAlignment="Top" Name="m_canvas"/>
-    </ScrollViewer>
+
+    <!-- Perhaps the listbox should be re-templated to have better selection appearance? -->
+    <!-- Note: Horz Scrollbar is always visible to avoid strange behavior due to Virtualizing -->
+    <ListBox x:Name="lstCommits" VirtualizingStackPanel.IsVirtualizing="True" 
+             Background="DarkGray" ScrollViewer.HorizontalScrollBarVisibility="Visible" SelectionChanged="lstCommits_SelectionChanged">
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <local:PlotCommitElement CurrentCommit="{Binding}" />
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListBox>
+    
 </UserControl>
